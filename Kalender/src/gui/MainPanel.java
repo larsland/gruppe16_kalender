@@ -47,6 +47,8 @@ public class MainPanel extends JFrame {
 	private JTable table;
 	private CalendarModel model;
 	private String username;
+	private static JPanel appointment;
+	private static JPanel participants;
 	/**
 	 * Launch the application.
 	 */
@@ -156,78 +158,32 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
+		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRenderer());
 		table.setRowHeight(50);
 		scrollPane.setViewportView(table);
-		JPanel appointment = new JPanel();
-		JPanel participants = new JPanel();
+		appointment = new JPanel();
+		participants = new JPanel();
 		appointment.setName("Informasjon");
 		participants.setName("Deltakere");
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(819, 107, 246, 366);
 		tabbedPane.add(appointment);
-		GridBagLayout gbl_appointment = new GridBagLayout();
-		gbl_appointment.columnWidths = new int[]{98, 29, 0};
-		gbl_appointment.rowHeights = new int[]{16, 0, 0, 0, 0, 0};
-		gbl_appointment.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_appointment.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		appointment.setLayout(gbl_appointment);
-		
-		JLabel lblStart = new JLabel("Start:");
-		GridBagConstraints gbc_lblStart = new GridBagConstraints();
-		gbc_lblStart.insets = new Insets(0, 0, 5, 5);
-		gbc_lblStart.gridx = 0;
-		gbc_lblStart.gridy = 0;
-		appointment.add(lblStart, gbc_lblStart);
+		appointment.setLayout(null);
 		
 		JLabel startTimeLabel = new JLabel();
-		GridBagConstraints gbc_startTimeLabel = new GridBagConstraints();
-		gbc_startTimeLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_startTimeLabel.gridx = 1;
-		gbc_startTimeLabel.gridy = 0;
-		appointment.add(startTimeLabel, gbc_startTimeLabel);
-		
-		JLabel lblSlutt = new JLabel("Slutt:");
-		GridBagConstraints gbc_lblSlutt = new GridBagConstraints();
-		gbc_lblSlutt.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSlutt.gridx = 0;
-		gbc_lblSlutt.gridy = 1;
-		appointment.add(lblSlutt, gbc_lblSlutt);
+		startTimeLabel.setBounds(0, 0, 0, 0);
+		appointment.add(startTimeLabel);
 		
 		JLabel sluttTimeLabel = new JLabel();
-		GridBagConstraints gbc_sluttTimeLabel = new GridBagConstraints();
-		gbc_sluttTimeLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_sluttTimeLabel.gridx = 1;
-		gbc_sluttTimeLabel.gridy = 1;
-		appointment.add(sluttTimeLabel, gbc_sluttTimeLabel);
-		
-		JLabel lblDato = new JLabel("Dato:");
-		GridBagConstraints gbc_lblDato = new GridBagConstraints();
-		gbc_lblDato.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDato.gridx = 0;
-		gbc_lblDato.gridy = 2;
-		appointment.add(lblDato, gbc_lblDato);
+		sluttTimeLabel.setBounds(0, 0, 0, 0);
+		appointment.add(sluttTimeLabel);
 		
 		JLabel dateLabel = new JLabel("");
-		GridBagConstraints gbc_dateLabel = new GridBagConstraints();
-		gbc_dateLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_dateLabel.gridx = 1;
-		gbc_dateLabel.gridy = 2;
-		appointment.add(dateLabel, gbc_dateLabel);
-		
-		JLabel lblSted = new JLabel("Sted:");
-		GridBagConstraints gbc_lblSted = new GridBagConstraints();
-		gbc_lblSted.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSted.gridx = 0;
-		gbc_lblSted.gridy = 3;
-		appointment.add(lblSted, gbc_lblSted);
-		
-		JLabel lblBeskrivelse = new JLabel("Beskrivelse:");
-		GridBagConstraints gbc_lblBeskrivelse = new GridBagConstraints();
-		gbc_lblBeskrivelse.insets = new Insets(0, 0, 0, 5);
-		gbc_lblBeskrivelse.gridx = 0;
-		gbc_lblBeskrivelse.gridy = 4;
-		appointment.add(lblBeskrivelse, gbc_lblBeskrivelse);
+		dateLabel.setBounds(0, 0, 0, 0);
+		appointment.add(dateLabel);
 		tabbedPane.add(participants);
 		contentPane.add(tabbedPane);
 	}
+	
+		
 }

@@ -17,8 +17,10 @@ public class App {
 
 
 	public static void main(String[] args) throws SQLException{
-		loginFrame = new LogInPanel();
-		loginFrame.setVisible(true);
+		//loginFrame = new LogInPanel();
+		//loginFrame.setVisible(true);
+		mainFrame = new MainPanel("andekol");
+		mainFrame.setVisible(true);
 	}
 	
 	public void validateUser(String username, String password) throws SQLException{
@@ -32,5 +34,9 @@ public class App {
 		else{
 			JOptionPane.showMessageDialog(loginFrame, "Feil brukernavn eller passord!");
 		}
+	}
+	
+	public static JFrame getMainFrame() {
+		return mainFrame;
 	}
 }

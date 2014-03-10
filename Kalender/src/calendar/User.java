@@ -20,5 +20,11 @@ public class User {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return username;
+	}
 
 }

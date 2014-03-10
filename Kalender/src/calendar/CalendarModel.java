@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -78,7 +79,7 @@ public class CalendarModel extends DefaultTableModel {
 			int hour = rs.getTimestamp("Starttid").getHours();
 			switch (day) {
 			case 1:
-				setMonday(rs.getString("Beskrivelse"), hour);
+				setMonday(new JButton(rs.getString("Beskrivelse")), hour);
 				break;
 			case 2:
 				setTuesday(rs.getString("Beskrivelse"), hour);
