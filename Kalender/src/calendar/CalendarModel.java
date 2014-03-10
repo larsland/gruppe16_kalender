@@ -79,7 +79,7 @@ public class CalendarModel extends DefaultTableModel {
 			int hour = rs.getTimestamp("Starttid").getHours();
 			switch (day) {
 			case 1:
-				setMonday(new JButton(rs.getString("Beskrivelse")), hour);
+				setMonday(rs.getString("Beskrivelse"), hour);
 				break;
 			case 2:
 				setTuesday(rs.getString("Beskrivelse"), hour);
@@ -107,7 +107,8 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 1);
+		String val = (String) this.getValueAt(time, 1);
+			this.setValueAt(value, time, 1);
 	}public void setTuesday(Object value, int time){
 		time = time - 7;
 		this.setValueAt(value, time, 2);
@@ -129,14 +130,19 @@ public class CalendarModel extends DefaultTableModel {
 	}
 	public void clear(){
 		for (int i = 7; i < 24; i++) {
-			setMonday(null, i);
-			setTuesday(null, i);
-			setWednesday(null, i);
-			setThursday(null, i);
-			setFriday(null, i);
-			setSaturday(null, i);
-			setSunday(null, i);
+			setMonday(" ", i);
+			setTuesday(" ", i);
+			setWednesday(" ", i);
+			setThursday(" ", i);
+			setFriday(" ", i);
+			setSaturday(" ", i);
+			setSunday(" ", i);
 		}
+	}
+	
+	@Override
+	public boolean isCellEditable(int row, int coloumn){
+		return false;
 	}
 
 

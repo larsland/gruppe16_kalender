@@ -160,8 +160,8 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
-		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRenderer());
 		table.setRowHeight(50);
+		table.setSelectionModel(new NullSelectionModel());
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
 		participants = new JPanel();
