@@ -79,25 +79,25 @@ public class CalendarModel extends DefaultTableModel {
 			int hour = rs.getTimestamp("Starttid").getHours();
 			switch (day) {
 			case 1:
-				setMonday(rs.getString("Beskrivelse"), hour);
+				setMonday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 2:
-				setTuesday(rs.getString("Beskrivelse"), hour);
+				setTuesday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 3:
-				setWednesday(rs.getString("Beskrivelse"), hour);
+				setWednesday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 4:
-				setThursday(rs.getString("Beskrivelse"), hour);
+				setThursday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 5:
-				setFriday(rs.getString("Beskrivelse"), hour);
+				setFriday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 6:
-				setSaturday(rs.getString("Beskrivelse"), hour);
+				setSaturday(rs.getInt("AvtaleID"), hour);
 				break;
 			case 7:
-				setSunday(rs.getString("Beskrivelse"), hour);
+				setSunday(rs.getInt("AvtaleID"), hour);
 				break;
 			default:
 				break;
@@ -107,8 +107,7 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time){
 		time = time - 7;
-		String val = (String) this.getValueAt(time, 1);
-			this.setValueAt(value, time, 1);
+		this.setValueAt(value, time, 1);
 	}public void setTuesday(Object value, int time){
 		time = time - 7;
 		this.setValueAt(value, time, 2);
@@ -130,13 +129,13 @@ public class CalendarModel extends DefaultTableModel {
 	}
 	public void clear(){
 		for (int i = 7; i < 24; i++) {
-			setMonday(" ", i);
-			setTuesday(" ", i);
-			setWednesday(" ", i);
-			setThursday(" ", i);
-			setFriday(" ", i);
-			setSaturday(" ", i);
-			setSunday(" ", i);
+			setMonday(null, i);
+			setTuesday(null, i);
+			setWednesday(null, i);
+			setThursday(null, i);
+			setFriday(null, i);
+			setSaturday(null, i);
+			setSunday(null, i);
 		}
 	}
 	
