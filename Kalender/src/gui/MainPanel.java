@@ -40,6 +40,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
 import calendar.CalendarModel;
+import javax.swing.JList;
 
 public class MainPanel extends JFrame {
 
@@ -49,6 +50,7 @@ public class MainPanel extends JFrame {
 	private String username;
 	private static JPanel appointment;
 	private static JPanel participants;
+
 	/**
 	 * Launch the application.
 	 */
@@ -181,9 +183,11 @@ public class MainPanel extends JFrame {
 		JLabel dateLabel = new JLabel("");
 		dateLabel.setBounds(0, 0, 0, 0);
 		appointment.add(dateLabel);
+		
+		JList list = new JList();
+		list.setBounds(83, 89, 1, 1);
+		appointment.add(list);
 		tabbedPane.add(participants);
 		contentPane.add(tabbedPane);
 	}
-	
-		
 }
