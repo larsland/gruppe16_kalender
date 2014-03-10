@@ -42,9 +42,8 @@ public class AddEvent extends JFrame {
 	private JTextField txtStartTime;
 	private JTextField txtEndTime;
 
-	private String[] capacity = {"1", "2", "3", "4", "5"};
+	private String[] capacity = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 	private String[] rooms = {"H1", "H2", "S4"};
-
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -169,9 +168,13 @@ public class AddEvent extends JFrame {
 		JSeparator separator3 = new JSeparator();
 		separator3.setBounds(12, 232, 347, 2);
 		contentPane.add(separator3);
+		
+
 	}
+	
 
 
+	
 //	class save implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
 //			event.setDesc(txtDescription.getText());
