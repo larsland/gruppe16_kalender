@@ -1,5 +1,8 @@
 package calendar;
 
+import gui.LogInPanel;
+import gui.MainPanel;
+
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
