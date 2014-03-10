@@ -20,30 +20,37 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.swing.JDesktopPane;
 import javax.swing.JSeparator;
 import javax.swing.JScrollBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
+import calendar.Database;
+import calendar.EventModel;
 
-public class addEvent extends JFrame {
+public class AddEvent extends JFrame {
 
+	private Database db = new Database();
+	private EventModel event = new EventModel();
 	private JPanel contentPane;
 	private JTextField txtStartTime;
 	private JTextField txtEndTime;
 	
 	private String[] capacity = {"1", "2", "3", "4", "5"};
 	private String[] rooms = {"H1", "H2", "S4"};
-	private String[] participants = {"Siv", "Per", "Beate"};
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					addEvent frame = new addEvent();
+					AddEvent frame = new AddEvent();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,10 +59,8 @@ public class addEvent extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public addEvent() {
+	
+	public AddEvent() throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 373, 487);
 		contentPane = new JPanel();
@@ -64,10 +69,9 @@ public class addEvent extends JFrame {
 		contentPane.setLayout(null);
 		initGUI();
 	}
-		
-		
 	
-	public void initGUI() {
+	
+	public void initGUI() throws SQLException {
 		JLabel lblStartTime = new JLabel("Start tid:");
 		lblStartTime.setBounds(12, 54, 70, 15);
 		contentPane.add(lblStartTime);
@@ -129,6 +133,31 @@ public class addEvent extends JFrame {
 		btnExit.setBounds(200, 421, 93, 25);
 		contentPane.add(btnExit);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(123, 296, 218, 81);
+		contentPane.add(scrollPane);
+		
+		JList list = new JList();
+		scrollPane.setViewportView(list);
+		list.setModel(new AbstractListModel() {
+			ArrayList values = db.getAllUsers();
+			public int getSize() {
+				return values.size();
+			}
+			public Object getElementAt(int index) {
+				return values.get(index);
+			}
+		});
+		list.setSelectedIndex(0);
+		
+		Border border = BorderFactory.createLineBorder(Color.BLACK);
+		JTextArea txtDescription = new JTextArea();
+		txtDescription.setBounds(123, 145, 208, 75);
+		txtDescription.setEditable(true);
+		txtDescription.setBorder(border);
+		String desc = txtDescription.getText();
+		contentPane.add(txtDescription);
+		
 		JSeparator separator1 = new JSeparator();
 		separator1.setBounds(12, 40, 347, 2);
 		contentPane.add(separator1);
@@ -140,40 +169,18 @@ public class addEvent extends JFrame {
 		JSeparator separator3 = new JSeparator();
 		separator3.setBounds(12, 232, 347, 2);
 		contentPane.add(separator3);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(123, 296, 218, 81);
-		contentPane.add(scrollPane);
-		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Per", "Siv", "Beate", "Anders", "Nils", "Kål", "Bjartis"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		list.setSelectedIndex(0);
-		
-		Border border = BorderFactory.createLineBorder(Color.BLACK);
-		JTextArea txtDescription = new JTextArea();
-		txtDescription.setBounds(123, 145, 208, 75);
-		txtDescription.setEditable(true);
-		txtDescription.setBorder(border);
-		
-		contentPane.add(txtDescription);
-		
-		
-		
-		
-	
-	
-		
-		
-		
 	}
-}
+	
+	
+//	class save implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			event.setDesc(txtDescription.getText());
+//			event.setDate(dateChooser.getDate());
+//		}
+//	}
+//	
+			
+			
+	
+}//class
 		
