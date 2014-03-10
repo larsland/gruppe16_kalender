@@ -1,0 +1,152 @@
+package calendar;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.sql.PreparedStatement;
+
+import org.joda.time.LocalDate;
+
+public class Database {
+	/**
+	 * 
+	 * 
+	 *
+	 */
+private String url = "jdbc:mysql://mysql.stud.ntnu.no/andekol_g16_db";
+private String username = "andekol_g16";
+private String pwd = "gruppe16";
+	
+//private String url = "jdbc:mysql://127.0.0.1/fls";
+//private String username = "root";
+//private String pwd = "";
+
+
+	private Connection con = null;
+	private Statement stmt;
+	private ResultSet rs;
+
+	public Database() {
+		try {
+			con = DriverManager.getConnection(url,username,pwd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	/*
+	 * Verify login
+	 */
+	public boolean userExists(String username, String password) throws SQLException{
+		stmt = con.createStatement();
+		rs = stmt.executeQuery("SELECT Brukernavn, passtoken FROM Person "
+				+ "WHERE Brukernavn = '"+username+"' LIMIT 1;");
+		
+		//check password
+		if (rs.next()) {
+			return BCrypt.checkpw(password, rs.getString("passtoken"));
+		}
+
+		return false; 
+	}
+	
+	
+	/*
+	 * Create appointment
+	 * TODO: M¿teleder, m¿terom/sted
+	 */
+	public void createAppointment(Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<User> participants) throws SQLException{
+		stmt = con.createStatement();
+		String query = "INSERT INTO Avtale (Dato, Starttid, Sluttid, Beskrivelse, Opprettet_av) VALUES "
+				+ "(?,?,?,?,?)";
+		PreparedStatement st = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		st.setDate(1, date);
+		st.setTimestamp(2, starttime);
+		st.setTimestamp(3, endtime);
+		st.setString(4, desc);
+		st.setString(5, creator);
+		st.executeUpdate();
+		// Lagre siste id
+	    ResultSet keys = st.getGeneratedKeys();    
+	    keys.next();  
+	    int key = keys.getInt(1);
+	    
+	    //Legg til deltakere
+	    String query2 = "INSERT INTO Deltar_pŒ VALUES (?,?,?);";
+	    st = con.prepareStatement(query2);
+	    for (User user : participants) {
+	      st.setInt(1, key);
+	      st.setString(2, user.getUsername());
+	      st.setInt(3, 0);
+	      st.executeUpdate();
+	    }
+	}
+	
+	/*
+	 * 
+	 */
+	public ResultSet getParticipantsInAppointment(int appointmentId) throws SQLException{
+		stmt = con.createStatement();
+		String query = "select brukernavn from Deltar_pŒ inner join Avtale on Deltar_pŒ.`AvtaleID` = Avtale.AvtaleID WHERE Deltar_pŒ.AvtaleID = "+appointmentId+";";
+		rs = stmt.executeQuery(query);
+		return rs;
+	}
+	
+	/*
+	 * 
+	 */
+	public ResultSet getAppointmentInfo(int appointmentId) throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT * FROM Avtale WHERE AvtaleID= '"+ appointmentId+"';";
+		rs = stmt.executeQuery(query);
+		return rs;
+		
+	}
+	
+	/*
+	 * Avtaler som bruker er invitert til
+	 */
+	public ResultSet getInvitedAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
+		stmt = con.createStatement();
+		String query = "select * from Avtale inner join `Deltar_pŒ` on `Deltar_pŒ`.`AvtaleID` = `Avtale`.`AvtaleID` and brukernavn = '"+username+"' and (Starttid between '"+monday+"' and '"+sunday+"');";
+		rs = stmt.executeQuery(query);
+		return rs;
+	}
+	
+	/*
+	 * Avtaler som bruker har opprettet selv
+	 */
+	public ResultSet getCreatedAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT * FROM Avtale WHERE Opprettet_av = '"+username+"' AND (Starttid BETWEEN '"+monday+"' AND '"+sunday+"');"; //' AND Starttid >= "+monday+" AND Sluttid <= "+sunday+"
+		rs = stmt.executeQuery(query);
+		return rs;
+	}
+	
+	
+	/*
+	 * Hent alle brukere i systemet
+	 */
+	public ArrayList getAllUsers() throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT Navn, Brukernavn FROM Person;";
+		rs = stmt.executeQuery(query);
+		ArrayList persons = new ArrayList<User>();
+		while (rs.next()) {
+			persons.add(new User(rs.getString("Navn"), rs.getString("Brukernavn")));
+		}
+		return persons;
+		
+	}
+	
+	
+	
+	
+}
