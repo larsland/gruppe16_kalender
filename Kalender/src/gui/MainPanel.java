@@ -18,6 +18,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JEditorPane;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
 import javax.swing.JInternalFrame;
@@ -39,8 +41,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
+import calendar.App;
 import calendar.CalendarModel;
+import calendar.EventModel;
+
 import javax.swing.JList;
+import javax.swing.JTextPane;
 
 public class MainPanel extends JFrame {
 
@@ -50,6 +56,7 @@ public class MainPanel extends JFrame {
 	private String username;
 	private static JPanel appointment;
 	private static JPanel participants;
+	private static App app = new App();
 
 	/**
 	 * Launch the application.
@@ -160,6 +167,9 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
+		table.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
+		
+		table.getColumnModel().getColumn(1).setCellEditor(new ButtonCellEditor());
 		table.setRowHeight(50);
 		table.setSelectionModel(new NullSelectionModel());
 		scrollPane.setViewportView(table);
@@ -170,24 +180,20 @@ public class MainPanel extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(819, 107, 246, 366);
 		tabbedPane.add(appointment);
-		appointment.setLayout(null);
-		
-		JLabel startTimeLabel = new JLabel();
-		startTimeLabel.setBounds(0, 0, 0, 0);
-		appointment.add(startTimeLabel);
-		
-		JLabel sluttTimeLabel = new JLabel();
-		sluttTimeLabel.setBounds(0, 0, 0, 0);
-		appointment.add(sluttTimeLabel);
-		
-		JLabel dateLabel = new JLabel("");
-		dateLabel.setBounds(0, 0, 0, 0);
-		appointment.add(dateLabel);
+	
 		
 		JList list = new JList();
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
 		tabbedPane.add(participants);
 		contentPane.add(tabbedPane);
+		
+		JButton btnNyAvtale = new JButton("Ny Avtale");
+		btnNyAvtale.setBounds(829, 485, 117, 29);
+		btnNyAvtale.addActionListener(app);
+		contentPane.add(btnNyAvtale);
+		
+		
 	}
+	
 }

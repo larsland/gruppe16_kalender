@@ -22,7 +22,7 @@ public class LogInPanel extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private App app = new App();
+	private static App app = new App();
 
 
 	/**

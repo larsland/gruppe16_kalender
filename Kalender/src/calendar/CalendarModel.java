@@ -1,5 +1,7 @@
 package calendar;
 
+import gui.EventBox;
+
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -54,6 +57,7 @@ public class CalendarModel extends DefaultTableModel {
 				"", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "L\u00F8rdag", "S\u00F8ndag"
 			});
 		this.username = username;
+		clear();
 		this.setThisWeeksAppointments(0);
 	}
 	
@@ -105,9 +109,15 @@ public class CalendarModel extends DefaultTableModel {
 		}
 	}
 	
-	public void setMonday(Object value, int time){
+	public void setMonday(Object value, int time) throws SQLException{
 		time = time - 7;
-		this.setValueAt(value, time, 1);
+		Object current = this.getValueAt(time, 1);
+		if (current != null) {
+			this.setValueAt(current +"-"+ value, time, 1);
+		}
+		else{
+			this.setValueAt(value, time, 1);
+		}
 	}public void setTuesday(Object value, int time){
 		time = time - 7;
 		this.setValueAt(value, time, 2);
@@ -127,12 +137,12 @@ public class CalendarModel extends DefaultTableModel {
 		time = time - 7;
 		this.setValueAt(value, time, 7);
 	}
-	public void clear(){
-		for (int i = 7; i < 24; i++) {
+	public void clear() throws SQLException{
+		for (int i = 7; i <= 24; i++) {
 			setMonday(null, i);
 			setTuesday(null, i);
 			setWednesday(null, i);
-			setThursday(null, i);
+			setThursday(null,i);
 			setFriday(null, i);
 			setSaturday(null, i);
 			setSunday(null, i);

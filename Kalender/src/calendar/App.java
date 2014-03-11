@@ -1,19 +1,23 @@
 package calendar;
 
+import gui.AddEvent;
 import gui.LogInPanel;
 import gui.MainPanel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class App {
+public class App implements ActionListener {
 	
 	private Database db = new Database();
 	private static String username = null;
 	private static JFrame loginFrame;
 	private static JFrame mainFrame;
+	private static JFrame newAppointmentFrame;
 
 
 	public static void main(String[] args) throws SQLException{
@@ -39,4 +43,18 @@ public class App {
 	public static JFrame getMainFrame() {
 		return mainFrame;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		try {
+			newAppointmentFrame = new AddEvent();
+			newAppointmentFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		newAppointmentFrame.setVisible(true);
+	}
+	
+	
 }

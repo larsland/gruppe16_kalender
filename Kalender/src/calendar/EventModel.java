@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
+
 public class EventModel {
 	
 	private String desc;
