@@ -11,8 +11,14 @@ import javax.swing.JTable;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.Color;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JEditorPane;
@@ -43,7 +49,6 @@ import javax.swing.JSplitPane;
 
 import calendar.App;
 import calendar.CalendarModel;
-import calendar.EventModel;
 
 import javax.swing.JList;
 import javax.swing.JTextPane;
@@ -57,7 +62,6 @@ public class MainPanel extends JFrame {
 	private static JPanel appointment;
 	private static JPanel participants;
 	private static App app = new App();
-
 	/**
 	 * Launch the application.
 	 */
@@ -153,13 +157,12 @@ public class MainPanel extends JFrame {
 		scrollPane.setBounds(55, 107, 746, 460);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
+		table = new JTable(model);
 		table.setGridColor(Color.BLACK);
 		table.setBackground(Color.WHITE);
 		table.setCellSelectionEnabled(false);
 		table.setRowSelectionAllowed(false);
 		table.setColumnSelectionAllowed(false);
-		table.setModel(model);
 		table.getColumnModel().getColumn(1).setPreferredWidth(150);
 		table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		table.getColumnModel().getColumn(3).setPreferredWidth(150);
@@ -167,11 +170,71 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
-		table.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		
-		table.getColumnModel().getColumn(1).setCellEditor(new ButtonCellEditor());
+		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(1).setCellEditor(new EventCellEditor());
+
+		table.getColumnModel().getColumn(2).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(2).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(3).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(3).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(4).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(4).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(5).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(5).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(6).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(6).setCellEditor(new EventCellEditor());
+
+		table.getColumnModel().getColumn(7).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(7).setCellEditor(new EventCellEditor());
+
 		table.setRowHeight(50);
-		table.setSelectionModel(new NullSelectionModel());
+		table.setRowSelectionAllowed(true);
+	    table.setColumnSelectionAllowed(false);
+		//table.setSelectionModel(new NullSelectionModel());
+		
+		/*table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				JTable source = (JTable) arg0.getSource();
+				try {
+					model.getAppointment(source.getSelectedRow(),source.getSelectedColumn(),dlm);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});*/
+
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
 		participants = new JPanel();
@@ -182,7 +245,7 @@ public class MainPanel extends JFrame {
 		tabbedPane.add(appointment);
 	
 		
-		JList list = new JList();
+		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
 		tabbedPane.add(participants);

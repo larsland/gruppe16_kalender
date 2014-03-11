@@ -1,14 +1,25 @@
 package calendar;
 
 import gui.EventBox;
+import gui.MainPanel;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -29,35 +40,39 @@ public class CalendarModel extends DefaultTableModel {
 	private LocalDate now = new LocalDate();
 	private LocalDate monday = now.withDayOfWeek(DateTimeConstants.MONDAY);
 	private LocalDate sunday = now.withDayOfWeek(DateTimeConstants.SUNDAY);
+	private static DefaultListModel listModel = new DefaultListModel();
 	Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
+	
+	public static DefaultListModel getListModel() {
+		return listModel;
+	}
 
 	public CalendarModel(String username) throws SQLException {
 		super(new Object[][] {
-				{"07:00", null, null, null, null, null, null, null},
-				{"08:00", null, null, null, null, null, null, null},
-				{"09:00", null, null, null, null, null, null, null},
-				{"10:00", null, null, null, null, null, null, null},
-				{"11:00", null, null, null, null, null, null, null},
-				{"12:00", null, null, null, null, null, null, null},
-				{"13:00", null, null, null, null, null, null, null},
-				{"14:00", null, null, null, null, null, null, null},
-				{"15:00", null, null, null, null, null, null, null},
-				{"16:00", null, null, null, null, null, null, null},
-				{"17:00", null, null, null, null, null, null, null},
-				{"18:00", null, null, null, null, null, null, null},
-				{"19:00", null, null, null, null, null, null, null},
-				{"20:00", null, null, null, null, null, null, null},
-				{"21:00", null, null, null, null, null, null, null},
-				{"22:00", null, null, null, null, null, null, null},
-				{"23:00", null, null, null, null, null, null, null},
-				{"00:00", null, null, null, null, null, null, null}
-			},
+				{"07:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"08:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"09:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"10:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"11:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"12:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"13:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"14:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"15:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"16:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"17:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"18:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"19:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"20:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"21:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"22:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"23:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+				{"00:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
+		},
 			new String[] {
 				"", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "L\u00F8rdag", "S\u00F8ndag"
 			});
 		this.username = username;
-		clear();
 		this.setThisWeeksAppointments(0);
 	}
 	
@@ -111,48 +126,64 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time) throws SQLException{
 		time = time - 7;
-		Object current = this.getValueAt(time, 1);
-		if (current != null) {
-			this.setValueAt(current +"-"+ value, time, 1);
+		GridBagConstraints c = new GridBagConstraints();
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 1)).add(new EventBox("",(Integer) value));
 		}
 		else{
-			this.setValueAt(value, time, 1);
+			this.setValueAt(new JPanel(), time, 1);
 		}
 	}public void setTuesday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 2);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 2)).add(new EventBox("",(Integer) value));
+		}
 	}public void setWednesday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 3);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 3)).add(new EventBox("",(Integer) value));
+		}
 	}public void setThursday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 4);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 4)).add(new EventBox("",(Integer) value));
+		}
 	}public void setFriday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 5);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 5)).add(new EventBox("",(Integer) value));
+		}
 	}public void setSaturday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 6);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 6)).add(new EventBox("",(Integer) value));
+		}
 	}public void setSunday(Object value, int time){
 		time = time - 7;
-		this.setValueAt(value, time, 7);
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 7)).add(new EventBox("",(Integer) value));
+		}
 	}
 	public void clear() throws SQLException{
+		listModel.removeAllElements();
 		for (int i = 7; i <= 24; i++) {
-			setMonday(null, i);
-			setTuesday(null, i);
-			setWednesday(null, i);
-			setThursday(null,i);
-			setFriday(null, i);
-			setSaturday(null, i);
-			setSunday(null, i);
+			setMonday(new JPanel(), i);
+			setTuesday(new JPanel(), i);
+			setWednesday(new JPanel(), i);
+			setThursday(new JPanel(),i);
+			setFriday(new JPanel(), i);
+			setSaturday(new JPanel(), i);
+			setSunday(new JPanel(), i);
 		}
 	}
 	
 	@Override
 	public boolean isCellEditable(int row, int coloumn){
-		return false;
+		return true;
 	}
+	
+
+	
 
 
 
