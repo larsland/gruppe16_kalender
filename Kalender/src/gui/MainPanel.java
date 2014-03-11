@@ -49,7 +49,6 @@ import javax.swing.JSplitPane;
 
 import calendar.App;
 import calendar.CalendarModel;
-import calendar.EventModel;
 
 import javax.swing.JList;
 import javax.swing.JTextPane;
