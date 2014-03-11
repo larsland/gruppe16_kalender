@@ -212,10 +212,9 @@ public class AddEvent extends JFrame {
 	class Save implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			event.setDesc(txtDescription.getText());
-			//event.setDate(dateChooser.getDate());
+			event.setDate(calendar.getDate());
 			event.setStart(txtStartTime.getText());
 			event.setEnd(txtEndTime.getText());
-			System.out.println(calendar.getDate());
 //			for (int i = 0; i < numMembers; i++) {
 //				if (memberList.isSelectedIndex(i)) {
 //					memberList.setSelectedIndex(i);
