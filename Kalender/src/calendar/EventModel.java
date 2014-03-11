@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
@@ -15,6 +16,7 @@ public class EventModel {
 	private Timestamp end;
 	private ArrayList<User> participants;
 	private User creator = new User();
+	
 	
 	public String getDesc() {
 		return desc;
@@ -57,7 +59,8 @@ public class EventModel {
 	public void setCreator(User creator) {
 		this.creator = creator;
 	}
-	
+
+
 	
 
 }

@@ -17,49 +17,18 @@ import javax.swing.table.TableCellRenderer;
 import calendar.CalendarModel;
 import calendar.App;
 
-public class EventBox extends JButton implements MouseListener {
+public class EventBox extends JButton implements ActionListener {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Integer appointmentId;
-
-	public EventBox(int i) throws SQLException {
-		addMouseListener(this);
-		this.appointmentId = i;
-		setText(appointmentId.toString());
-		setOpaque(true);
-		setFocusable(true);
-		setRolloverEnabled(true);
+	public EventBox(String s) {
+		super(s);
+		addActionListener(this);
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		setText("faen");
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		setText("faen");
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) {
+		if ((e != null) && (e.getSource() == this)) {
+		    JOptionPane.showMessageDialog(null, getText() + " was pressed!");
+		 }
 	}
 
 }

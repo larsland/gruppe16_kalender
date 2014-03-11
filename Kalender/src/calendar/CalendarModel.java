@@ -1,14 +1,22 @@
 package calendar;
 
+import gui.ButtonColumn;
 import gui.EventBox;
+import gui.MainPanel;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -111,13 +119,7 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time) throws SQLException{
 		time = time - 7;
-		Object current = this.getValueAt(time, 1);
-		if (current != null) {
-			this.setValueAt(current +"-"+ value, time, 1);
-		}
-		else{
-			this.setValueAt(value, time, 1);
-		}
+		this.setValueAt(value, time, 1);
 	}public void setTuesday(Object value, int time){
 		time = time - 7;
 		this.setValueAt(value, time, 2);
@@ -151,7 +153,23 @@ public class CalendarModel extends DefaultTableModel {
 	
 	@Override
 	public boolean isCellEditable(int row, int coloumn){
-		return false;
+		return true;
+	}
+
+
+	public void getAppointment(int selectedRow, int selectedColumn, DefaultListModel dlm) throws SQLException {
+		dlm.removeAllElements();
+		if (this.getValueAt(selectedRow, selectedColumn) != null) {
+			int appId = (Integer) this.getValueAt(selectedRow, selectedColumn);
+			ResultSet rs = db.getAppointmentInfo(appId);
+			while (rs.next()) {
+				dlm.addElement("Start: "+rs.getObject("Starttid"));
+				dlm.addElement("Slutt: "+rs.getObject("Sluttid"));
+				dlm.addElement("Beskrivelse: " + rs.getObject("Beskrivelse"));
+				
+			}
+		}
+
 	}
 
 
