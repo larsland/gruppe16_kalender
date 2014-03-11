@@ -26,9 +26,10 @@ public class EventBox extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ((e != null) && (e.getSource() == this)) {
+		System.out.println("bra pressa!");
+/*		if ((e != null) && (e.getSource() == this)) {
 		    JOptionPane.showMessageDialog(null, getText() + " was pressed!");
-		 }
+		 }*/
 	}
 
 }

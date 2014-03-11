@@ -172,10 +172,34 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
+		
+		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(1).setCellEditor(new EventCellEditor());
+
+		table.getColumnModel().getColumn(2).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(2).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(3).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(3).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(4).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(4).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(5).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(5).setCellEditor(new EventCellEditor());
+		
+		table.getColumnModel().getColumn(6).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(6).setCellEditor(new EventCellEditor());
+
+		table.getColumnModel().getColumn(7).setCellRenderer(new EventCellRender());
+		table.getColumnModel().getColumn(7).setCellEditor(new EventCellEditor());
+
 		table.setRowHeight(50);
+		table.setRowSelectionAllowed(true);
+	    table.setColumnSelectionAllowed(false);
 		//table.setSelectionModel(new NullSelectionModel());
 		
-		table.addMouseListener(new MouseListener() {
+		/*table.addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -211,7 +235,7 @@ public class MainPanel extends JFrame {
 				// TODO Auto-generated method stub
 				
 			}
-		});
+		});*/
 
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
