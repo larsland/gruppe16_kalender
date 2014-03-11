@@ -63,7 +63,6 @@ public class MainPanel extends JFrame {
 	private static JPanel appointment;
 	private static JPanel participants;
 	private static App app = new App();
-	DefaultListModel dlm;
 	/**
 	 * Launch the application.
 	 */
@@ -247,8 +246,7 @@ public class MainPanel extends JFrame {
 		tabbedPane.add(appointment);
 	
 		
-		dlm = new DefaultListModel();
-		JList list = new JList(dlm);
+		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
 		tabbedPane.add(participants);
