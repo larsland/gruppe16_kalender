@@ -3,7 +3,8 @@ package calendar;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
@@ -11,8 +12,8 @@ public class EventModel {
 	
 	private String desc;
 	private Date date;
-	private Timestamp start;
-	private Timestamp end;
+	private String start;
+	private String end;
 	private ArrayList<User> participants;
 	private User creator = new User();
 	
@@ -26,21 +27,23 @@ public class EventModel {
 	public Date getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
+	public void setDate(java.util.Date date) {
+		java.util.Date utlDate = date;
+		java.sql.Date sqlDate = new java.sql.Date(utlDate.getTime());
+		this.date = sqlDate;
+	}				
 	
-	public Timestamp getStart() {
+	public String getStart() {
 		return start;
 	}
-	public void setStart(Timestamp start) {
+	public void setStart(String start) {
 		this.start = start;
 	}
 	
-	public Timestamp getEnd() {
+	public String getEnd() {
 		return end;
 	}
-	public void setEnd(Timestamp end) {
+	public void setEnd(String end) {
 		this.end = end;
 	}
 	

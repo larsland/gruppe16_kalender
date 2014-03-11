@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JSeparator;
@@ -33,15 +34,29 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import calendar.Database;
 import calendar.EventModel;
+import javax.swing.table.DefaultTableModel;
+import com.toedter.calendar.JDayChooser;
+import com.toedter.calendar.JCalendar;
 
 public class AddEvent extends JFrame {
 
 	private Database db = new Database();
 	private EventModel event = new EventModel();
+	
 	private JPanel contentPane;
+	private static AddEvent frame;
+	private JTextArea txtDescription;
 	private JTextField txtStartTime;
 	private JTextField txtEndTime;
-
+	private JComboBox cbCapacity;
+	private JComboBox cbRooms;
+	private JList memberList;
+	private ArrayList participants;
+	private int numMembers;
+	private JCalendar calendar;
+	private JTextField textField;
+	JButton btnBekreftDato;
+	
 	private String[] capacity = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 	private String[] rooms = {"H1", "H2", "S4"};
 
@@ -49,7 +64,7 @@ public class AddEvent extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddEvent frame = new AddEvent();
+					frame = new AddEvent();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,8 +75,10 @@ public class AddEvent extends JFrame {
 
 
 	public AddEvent() throws SQLException {
+		numMembers = db.getAllUsers().size();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 373, 487);
+		setBounds(100, 100, 363, 661);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -95,50 +112,48 @@ public class AddEvent extends JFrame {
 		txtEndTime.setColumns(10);
 
 		JLabel lblDate = new JLabel("Dato:");
-		lblDate.setBounds(12, 107, 70, 15);
+		lblDate.setBounds(12, 284, 70, 15);
 		contentPane.add(lblDate);
 
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(123, 107, 218, 19);
-		contentPane.add(dateChooser);
-
 		JLabel lblDescription = new JLabel("Beskrivelse:");
-		lblDescription.setBounds(12, 145, 100, 15);
+		lblDescription.setBounds(12, 325, 100, 15);
 		contentPane.add(lblDescription);
 
 		JLabel lblCapacity = new JLabel("Kapasitet:");
-		lblCapacity.setBounds(12, 251, 84, 15);
+		lblCapacity.setBounds(12, 430, 84, 15);
 		contentPane.add(lblCapacity);
 
 		JLabel lblDeltagere = new JLabel("Deltagere:");
-		lblDeltagere.setBounds(12, 297, 84, 15);
+		lblDeltagere.setBounds(12, 476, 84, 15);
 		contentPane.add(lblDeltagere);
 
 		JComboBox cbCapacity = new JComboBox(capacity);
 		cbCapacity.setToolTipText("#");
-		cbCapacity.setBounds(123, 246, 46, 24);
+		cbCapacity.setBounds(123, 425, 46, 24);
 		contentPane.add(cbCapacity);
 
 		JComboBox cbRoom = new JComboBox(rooms);
 		cbRoom.setToolTipText("Room");
-		cbRoom.setBounds(198, 246, 143, 24);
+		cbRoom.setBounds(198, 425, 143, 24);
 		contentPane.add(cbRoom);
 
 		JButton btnSave = new JButton("Lagre");
-		btnSave.setBounds(78, 421, 93, 25);
+		btnSave.setBounds(77, 595, 93, 25);	
+		btnSave.addActionListener(new Save());
 		contentPane.add(btnSave);
 
 		JButton btnExit = new JButton("Avbryt");
-		btnExit.setBounds(200, 421, 93, 25);
+		btnExit.setBounds(199, 595, 93, 25);
+		btnExit.addActionListener(new Exit());
 		contentPane.add(btnExit);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(123, 296, 218, 81);
+		scrollPane.setBounds(123, 476, 218, 81);
 		contentPane.add(scrollPane);
 
-		JList list = new JList();
-		scrollPane.setViewportView(list);
-		list.setModel(new AbstractListModel() {
+		memberList = new JList();
+		scrollPane.setViewportView(memberList);
+		memberList.setModel(new AbstractListModel() {
 			ArrayList values = db.getAllUsers();
 			public int getSize() {
 				return values.size();
@@ -147,11 +162,11 @@ public class AddEvent extends JFrame {
 				return values.get(index);
 			}
 		});
-		list.setSelectedIndex(0);
+		memberList.setSelectedIndex(0);
 
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
-		JTextArea txtDescription = new JTextArea();
-		txtDescription.setBounds(123, 145, 208, 75);
+		txtDescription = new JTextArea();
+		txtDescription.setBounds(123, 324, 218, 75);
 		txtDescription.setEditable(true);
 		txtDescription.setBorder(border);
 		String desc = txtDescription.getText();
@@ -162,27 +177,61 @@ public class AddEvent extends JFrame {
 		contentPane.add(separator1);
 
 		JSeparator separator2 = new JSeparator();
-		separator2.setBounds(12, 134, 347, 2);
+		separator2.setBounds(12, 311, 347, 2);
 		contentPane.add(separator2);
 
 		JSeparator separator3 = new JSeparator();
-		separator3.setBounds(12, 232, 347, 2);
+		separator3.setBounds(12, 411, 347, 2);
 		contentPane.add(separator3);
 		
-
+		calendar = new JCalendar();
+		calendar.setBounds(12, 133, 329, 133);
+		calendar.setBorder(border);
+		contentPane.add(calendar);
+		
+		textField = new JTextField();
+		textField.setBounds(123, 282, 218, 19);
+		textField.setEditable(false);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		btnBekreftDato = new JButton("Bekfreft dato");
+		btnBekreftDato.setBounds(208, 75, 133, 25);
+		btnBekreftDato.addActionListener(new mleh());
+		contentPane.add(btnBekreftDato);
+		
+	
 	}
 	
+	class mleh implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			textField.setText(calendar.getDate().toString());
+		}
+	}
 
-
+	class Save implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			event.setDesc(txtDescription.getText());
+			//event.setDate(dateChooser.getDate());
+			event.setStart(txtStartTime.getText());
+			event.setEnd(txtEndTime.getText());
+			System.out.println(calendar.getDate());
+//			for (int i = 0; i < numMembers; i++) {
+//				if (memberList.isSelectedIndex(i)) {
+//					memberList.setSelectedIndex(i);
+//					System.out.println(memberList.getSelectedValue());
+//					//participants.add(memberList.getSelectedValue());
+//				}
+//			}
+		}
+	}
+			
+		
+			
 	
-//	class save implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			event.setDesc(txtDescription.getText());
-//			event.setDate(dateChooser.getDate());
-//		}
-//	}
-//	
-
-
-
+	class Exit implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			frame.dispose();	
+		}
+	}
 }//class
