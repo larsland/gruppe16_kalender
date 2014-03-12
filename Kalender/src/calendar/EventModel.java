@@ -3,12 +3,15 @@ package calendar;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 import com.toedter.calendar.JDateChooser;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
-public class EventModel {
+public class EventModel extends DefaultListModel{
 	
 	private String desc;
 	private Date date;
@@ -16,6 +19,18 @@ public class EventModel {
 	private String end;
 	private ArrayList<User> participants;
 	private User creator = new User();
+	
+	public EventModel(){
+		
+	}
+	
+	public EventModel(String desc, Date date, String start, String end, User creator) {
+		setDate(date);
+		setDesc(desc);
+		setStart(start);
+		setEnd(end);
+		setCreator(creator);
+	}
 	
 	public String getDesc() {
 		return desc;

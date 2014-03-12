@@ -40,12 +40,16 @@ public class CalendarModel extends DefaultTableModel {
 	private LocalDate now = new LocalDate();
 	private LocalDate monday = now.withDayOfWeek(DateTimeConstants.MONDAY);
 	private LocalDate sunday = now.withDayOfWeek(DateTimeConstants.SUNDAY);
-	private static DefaultListModel listModel = new DefaultListModel();
+	private static DefaultListModel listModel = new EventModel();
+	private static DefaultListModel participantsModel = new DefaultListModel();
 	Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
 	
 	public static DefaultListModel getListModel() {
 		return listModel;
+	}
+	public static DefaultListModel getParticipantsModel() {
+		return participantsModel;
 	}
 
 	public CalendarModel(String username) throws SQLException {
@@ -128,40 +132,44 @@ public class CalendarModel extends DefaultTableModel {
 		time = time - 7;
 		GridBagConstraints c = new GridBagConstraints();
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 1)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 1)).add(new EventBox("",(Integer) value, username));
 		}
 		else{
 			this.setValueAt(new JPanel(), time, 1);
 		}
-	}public void setTuesday(Object value, int time){
+	}public void setTuesday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 2)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 2)).add(new EventBox("",(Integer) value, username));
 		}
-	}public void setWednesday(Object value, int time){
-		time = time - 7;
-		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 3)).add(new EventBox("",(Integer) value));
+		else{
+			this.setValueAt(new JPanel(), time, 2);
+
 		}
-	}public void setThursday(Object value, int time){
+	}public void setWednesday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 4)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 3)).add(new EventBox("",(Integer) value, username));
 		}
-	}public void setFriday(Object value, int time){
+	}public void setThursday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 5)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 4)).add(new EventBox("",(Integer) value, username));
 		}
-	}public void setSaturday(Object value, int time){
+	}public void setFriday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 6)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 5)).add(new EventBox("",(Integer) value, username));
 		}
-	}public void setSunday(Object value, int time){
+	}public void setSaturday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
-			((JPanel) this.getValueAt(time, 7)).add(new EventBox("",(Integer) value));
+			((JPanel) this.getValueAt(time, 6)).add(new EventBox("",(Integer) value, username));
+		}
+	}public void setSunday(Object value, int time) throws SQLException{
+		time = time - 7;
+		if (!(value instanceof JPanel)) {
+			((JPanel) this.getValueAt(time, 7)).add(new EventBox("",(Integer) value, username));
 		}
 	}
 	public void clear() throws SQLException{
@@ -181,10 +189,5 @@ public class CalendarModel extends DefaultTableModel {
 	public boolean isCellEditable(int row, int coloumn){
 		return true;
 	}
-	
-
-	
-
-
 
 }

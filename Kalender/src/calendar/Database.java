@@ -94,7 +94,7 @@ private String pwd = "gruppe16";
 	 */
 	public ResultSet getParticipantsInAppointment(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
-		String query = "select brukernavn from Deltar_pŒ inner join Avtale on Deltar_pŒ.`AvtaleID` = Avtale.AvtaleID WHERE Deltar_pŒ.AvtaleID = "+appointmentId+";";
+		String query = "select brukernavn, Godkjenning from Deltar_pŒ inner join Avtale on Deltar_pŒ.`AvtaleID` = Avtale.AvtaleID WHERE Deltar_pŒ.AvtaleID = "+appointmentId+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
@@ -126,6 +126,13 @@ private String pwd = "gruppe16";
 	public ResultSet getCreatedAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
 		stmt = con.createStatement();
 		String query = "SELECT * FROM Avtale WHERE Opprettet_av = '"+username+"' AND (Starttid BETWEEN '"+monday+"' AND '"+sunday+"');"; //' AND Starttid >= "+monday+" AND Sluttid <= "+sunday+"
+		rs = stmt.executeQuery(query);
+		return rs;
+	}
+	
+	public ResultSet getStatusForAppointment(String username, int appID) throws SQLException{
+		stmt = con.createStatement();
+		String query = "select brukernavn, Godkjenning from Deltar_pŒ WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}

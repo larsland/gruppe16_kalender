@@ -249,6 +249,11 @@ public class MainPanel extends JFrame {
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
 		tabbedPane.add(participants);
+		
+		JList list2 = new JList(model.getParticipantsModel());
+		list2.setCellRenderer(new ParticipantsRenderer());
+		participants.add(list2);
+		list.setBounds(83, 89, 1, 1);
 		contentPane.add(tabbedPane);
 		
 		JButton btnNyAvtale = new JButton("Ny Avtale");
