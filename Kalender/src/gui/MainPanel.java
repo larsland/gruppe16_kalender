@@ -197,18 +197,19 @@ public class MainPanel extends JFrame {
 	    table.setColumnSelectionAllowed(false);
 
 		scrollPane.setViewportView(table);
-		appointment = new JPanel();
+//		appointment = new JPanel();
 		participants = new JPanel();
-		appointment.setName("Informasjon");
+//		appointment.setName("Informasjon");
+		model.getAppointment().setName("Informasjon");
 		participants.setName("Deltakere");
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(819, 107, 246, 366);
-		tabbedPane.add(appointment);
+		tabbedPane.add(model.getAppointment());
 	
 		
 		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
-		appointment.add(list);
+		model.getAppointment().add(list);
 		tabbedPane.add(participants);
 		
 		JList list2 = new JList(model.getParticipantsModel());

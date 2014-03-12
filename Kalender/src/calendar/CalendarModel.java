@@ -42,6 +42,7 @@ public class CalendarModel extends DefaultTableModel {
 	private LocalDate sunday = now.withDayOfWeek(DateTimeConstants.SUNDAY);
 	private static DefaultListModel listModel = new EventModel();
 	private static DefaultListModel participantsModel = new DefaultListModel();
+	private static JPanel appointment = new JPanel();
 	Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
 	
@@ -50,6 +51,10 @@ public class CalendarModel extends DefaultTableModel {
 	}
 	public static DefaultListModel getParticipantsModel() {
 		return participantsModel;
+	}
+	
+	public static JPanel getAppointment() {
+		return appointment;
 	}
 
 	public CalendarModel(String username) throws SQLException {
