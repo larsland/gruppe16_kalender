@@ -81,5 +81,16 @@ public class LogInPanel extends JFrame {
 		});
 		btnLoggInn.setBounds(181, 105, 117, 29);
 		contentPane.add(btnLoggInn);
+
+		JButton btnNewUser = new JButton("Ny bruker?");
+		btnNewUser.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				app.goToRegister();
+			}
+		});
+		btnNewUser.setBounds(38, 106, 100, 28);
+		contentPane.add(btnNewUser);
 	}
 }
