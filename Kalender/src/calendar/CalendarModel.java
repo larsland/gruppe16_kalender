@@ -130,7 +130,6 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time) throws SQLException{
 		time = time - 7;
-		GridBagConstraints c = new GridBagConstraints();
 		if (!(value instanceof JPanel)) {
 			((JPanel) this.getValueAt(time, 1)).add(new EventBox("",(Integer) value, username));
 		}
@@ -151,15 +150,26 @@ public class CalendarModel extends DefaultTableModel {
 		if (!(value instanceof JPanel)) {
 			((JPanel) this.getValueAt(time, 3)).add(new EventBox("",(Integer) value, username));
 		}
+		else{
+			this.setValueAt(new JPanel(), time, 3);
+
+		}
 	}public void setThursday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
 			((JPanel) this.getValueAt(time, 4)).add(new EventBox("",(Integer) value, username));
 		}
+		else{
+			this.setValueAt(new JPanel(), time, 4);
+
+		}
 	}public void setFriday(Object value, int time) throws SQLException{
 		time = time - 7;
 		if (!(value instanceof JPanel)) {
 			((JPanel) this.getValueAt(time, 5)).add(new EventBox("",(Integer) value, username));
+		}else{
+			this.setValueAt(new JPanel(), time, 4);
+
 		}
 	}public void setSaturday(Object value, int time) throws SQLException{
 		time = time - 7;
