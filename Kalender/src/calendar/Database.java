@@ -14,14 +14,14 @@ import org.joda.time.LocalDate;
 
 public class Database {
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 *
 	 */
 private String url = "jdbc:mysql://mysql.stud.ntnu.no/andekol_g16_db";
 private String username = "andekol_g16";
 private String pwd = "gruppe16";
-	
+
 //private String url = "jdbc:mysql://127.0.0.1/fls";
 //private String username = "root";
 //private String pwd = "";
@@ -38,26 +38,31 @@ private String pwd = "gruppe16";
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	/*
-	 * Verify login
-	 */
-	public boolean userExists(String username, String password) throws SQLException{
-		stmt = con.createStatement();
-		rs = stmt.executeQuery("SELECT Brukernavn, passtoken FROM Person "
-				+ "WHERE Brukernavn = '"+username+"' LIMIT 1;");
-		
-		//check password
-		if (rs.next()) {
-			return BCrypt.checkpw(password, rs.getString("passtoken"));
-		}
 
-		return false; 
-	}
-	
-	
+
+
+  /*
+   * Verify login
+   */
+  public boolean userExists(String username) throws SQLException{
+    stmt = con.createStatement();
+    rs = stmt.executeQuery("SELECT Brukernavn FROM Person " +
+        "WHERE Brukernavn = '"+username +"' LIMIT 1;");
+
+    if (rs.next()) {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean checkPass(String username, String password) throws SQLException {
+    if (userExists(username)) {
+      return BCrypt.checkpw(password, BCrypt.hashpw(password, BCrypt.gensalt()));
+    }
+    return false;
+  }
+
+
 	/*
 	 * Create appointment
 	 * TODO: Møteleder, møterom/sted
@@ -74,10 +79,10 @@ private String pwd = "gruppe16";
 		st.setString(5, creator);
 		st.executeUpdate();
 		// Lagre siste id
-	    ResultSet keys = st.getGeneratedKeys();    
-	    keys.next();  
+	    ResultSet keys = st.getGeneratedKeys();
+	    keys.next();
 	    int key = keys.getInt(1);
-	    
+
 	    //Legg til deltakere
 	    String query2 = "INSERT INTO Deltar_på VALUES (?,?,?);";
 	    st = con.prepareStatement(query2);
@@ -88,9 +93,9 @@ private String pwd = "gruppe16";
 	      st.executeUpdate();
 	    }
 	}
-	
+
 	/*
-	 * 
+	 *
 	 */
 	public ResultSet getParticipantsInAppointment(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
@@ -98,18 +103,18 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
+
 	/*
-	 * 
+	 *
 	 */
 	public ResultSet getAppointmentInfo(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
 		String query = "SELECT * FROM Avtale WHERE AvtaleID= '"+ appointmentId+"';";
 		rs = stmt.executeQuery(query);
 		return rs;
-		
+
 	}
-	
+
 	/*
 	 * Avtaler som bruker er invitert til
 	 */
@@ -119,7 +124,7 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
+
 	/*
 	 * Avtaler som bruker har opprettet selv
 	 */
@@ -129,15 +134,15 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
+
 	public ResultSet getStatusForAppointment(String username, int appID) throws SQLException{
 		stmt = con.createStatement();
 		String query = "select brukernavn, Godkjenning from Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
-	
+
+
 	/*
 	 * Hent alle brukere i systemet
 	 */
@@ -150,10 +155,10 @@ private String pwd = "gruppe16";
 			persons.add(new User(rs.getString("Navn"), rs.getString("Brukernavn")));
 		}
 		return persons;
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 }

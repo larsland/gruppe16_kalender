@@ -195,45 +195,6 @@ public class MainPanel extends JFrame {
 		table.setRowHeight(50);
 		table.setRowSelectionAllowed(true);
 	    table.setColumnSelectionAllowed(false);
-		//table.setSelectionModel(new NullSelectionModel());
-		
-		/*table.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				JTable source = (JTable) arg0.getSource();
-				try {
-					model.getAppointment(source.getSelectedRow(),source.getSelectedColumn(),dlm);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});*/
 
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
@@ -261,6 +222,14 @@ public class MainPanel extends JFrame {
 		btnNyAvtale.addActionListener(app);
 		contentPane.add(btnNyAvtale);
 		
+		JButton btnLogout = new JButton("Logg ut");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				app.goToLoginn();
+			}
+		});
+		btnLogout.setBounds(944, 8, 97, 25);
+		contentPane.add(btnLogout);
 		
 	}
 	
