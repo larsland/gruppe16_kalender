@@ -209,6 +209,7 @@ public class MainPanel extends JFrame {
 		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
+		appointment.add(new JButton("Fjern"));
 		tabbedPane.add(participants);
 		
 		JList list2 = new JList(model.getParticipantsModel());

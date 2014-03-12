@@ -91,6 +91,7 @@ public class CalendarModel extends DefaultTableModel {
 		if (weekNumber > 0) {
 			_monday.setDate(_monday.getDate() + 7);
 			_sunday.setDate(_sunday.getDate() + 7);
+
 		} else if (weekNumber < 0) {
 			_monday.setDate(_monday.getDate() - 7);
 			_sunday.setDate(_sunday.getDate() - 7);

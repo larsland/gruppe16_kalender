@@ -46,7 +46,7 @@ public class EventCellEditor extends AbstractCellEditor implements TableCellEdit
 	@Override
 	public boolean stopCellEditing() {
 		super.stopCellEditing();
-	      return true;
+	    return true;
 	}
 
 	@Override
