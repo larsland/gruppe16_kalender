@@ -10,7 +10,7 @@ public class Notification {
 	
 	private Database db = new Database();
 	private ResultSet rs;
-	ArrayList<String> notMessages;
+	private ArrayList<String> notMessages;
 	private ArrayList<Integer> notAvtaleID;
 	private ArrayList<Timestamp> notTime;
 	private String username;
@@ -55,11 +55,9 @@ public class Notification {
 	}
 	
 	public void removeNoti(int index) {
-		try {
-			db.removeVarsel(notAvtaleID.get(index), username);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//db.removeVarsel(notAvtaleID.get(index), username);
+		notAvtaleID.remove(index);
+		notMessages.remove(index);
+		notTime.remove(index);
 	}
 }

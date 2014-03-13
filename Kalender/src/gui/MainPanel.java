@@ -104,14 +104,19 @@ public class MainPanel extends JFrame {
 		
 		notPanel = new JPopupMenu();
 		notPanel.setLayout(new BorderLayout());
-		ArrayList<String> notArray = notification.getNotMessages();
-		notList = new JList(notArray.toArray());
+		notList = new JList(notification.getNotMessages().toArray());
 		
 		notList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 notPanel.setVisible(false);
+                CalendarModel.fillSidePanel(notification.getNotAvtaleID().get(notList.getSelectedIndex()));
                 notification.removeNoti(notList.getSelectedIndex());
+                notPanel.remove(notList);
+                notList = new JList(notification.getNotMessages().toArray());
+                notPanel.add(notList);
+                notList.addListSelectionListener(this);
+                
                 btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
                 // AvtaleID for selected avtale = notification.getNotAvtaleID().get(notList.getSelectedIndex());
                 //set correct eventPanel and delete notification from db
@@ -122,14 +127,16 @@ public class MainPanel extends JFrame {
 		notPanel.setVisible(false);
 		contentPane.add(notPanel);
 		
-		btnNoti = new JButton(notArray.size() + "");
+		btnNoti = new JButton(notification.getNotAvtaleID().size() + "");
 		btnNoti.setForeground(Color.BLACK);
 		btnNoti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
                 int x = 29;
                 int y = 21;
-                notPanel.show(btnNoti, x, y);
-				notPanel.setVisible(true);
+	            if (notification.getNotAvtaleID().size() > 0) {    
+                	notPanel.show(btnNoti, x, y);
+					notPanel.setVisible(true);
+	            }
 			}
 		});
 		btnNoti.setBounds(6, 6, 45, 29);
