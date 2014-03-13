@@ -75,18 +75,16 @@ public class MainPanel extends JFrame {
 	private final JLabel lblFredag;
 	private final JLabel lblLrdag;
 	private final JLabel lblSndag;
-	/**
-	 * Launch the application.
-	 */
+	private CheckCombo personsComboBox = new CheckCombo();
 	private JPopupMenu notPanel;
 	private JList notList;
 	private Notification notification;
 	private JButton btnNoti;
-	
+
 
 	/**
 	 * Create the frame.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public MainPanel(final String username) throws SQLException {
 		this.username = username;
@@ -100,12 +98,12 @@ public class MainPanel extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
+
+
 		notPanel = new JPopupMenu();
 		notPanel.setLayout(new BorderLayout());
 		notList = new JList(notification.getNotMessages().toArray());
-		
+
 		notList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -116,22 +114,22 @@ public class MainPanel extends JFrame {
                 notList = new JList(notification.getNotMessages().toArray());
                 notPanel.add(notList);
                 notList.addListSelectionListener(this);
-                
+
                 btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
             }
 		});
-		
+
 		notPanel.add(notList);
 		notPanel.setVisible(false);
 		contentPane.add(notPanel);
-		
+
 		btnNoti = new JButton(notification.getNotAvtaleID().size() + "");
 		btnNoti.setForeground(Color.BLACK);
 		btnNoti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
                 int x = 29;
                 int y = 21;
-	            if (notification.getNotAvtaleID().size() > 0) {  
+	            if (notification.getNotAvtaleID().size() > 0) {
                 	notPanel.show(btnNoti, x, y);
 					notPanel.setVisible(true);
 	            }
@@ -139,7 +137,7 @@ public class MainPanel extends JFrame {
 		});
 		btnNoti.setBounds(6, 6, 45, 29);
 		contentPane.add(btnNoti);
-		
+
 		JButton btnNewButton = new JButton("Forrige uke");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -152,7 +150,7 @@ public class MainPanel extends JFrame {
 					lblFredag.setText(model.getDateString(5));
 					lblLrdag.setText(model.getDateString(6));
 					lblSndag.setText(model.getDateString(7));
-					
+
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -161,41 +159,41 @@ public class MainPanel extends JFrame {
 		});
 		btnNewButton.setBounds(48, 47, 117, 29);
 		contentPane.add(btnNewButton);
-		
+
 		lblMandag = new JLabel(model.getDateString(1));
 		lblMandag.setBounds(127, 88, 61, 16);
 		contentPane.add(lblMandag);
-		
+
 		lblTirsdag = new JLabel(model.getDateString(2));
 		lblTirsdag.setBounds(223, 88, 61, 16);
 		contentPane.add(lblTirsdag);
-		
+
 		lblOnsdag = new JLabel(model.getDateString(3));
 		lblOnsdag.setBounds(316, 88, 61, 16);
 		contentPane.add(lblOnsdag);
-		
+
 		lblTorsdag = new JLabel(model.getDateString(4));
 		lblTorsdag.setBounds(412, 88, 61, 16);
 		contentPane.add(lblTorsdag);
-		
+
 		lblFredag = new JLabel(model.getDateString(5));
 		lblFredag.setBounds(510, 88, 61, 16);
 		contentPane.add(lblFredag);
-		
+
 		lblLrdag = new JLabel(model.getDateString(6));
 		lblLrdag.setBounds(603, 88, 61, 16);
 		contentPane.add(lblLrdag);
-		
+
 		lblSndag = new JLabel(model.getDateString(7));
 		lblSndag.setBounds(704, 88, 61, 16);
 		contentPane.add(lblSndag);
-		
+
 		JButton btnNesteUke = new JButton("Neste uke");
 		btnNesteUke.setBounds(684, 47, 117, 29);
 		contentPane.add(btnNesteUke);
-		
+
 		btnNesteUke.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -211,15 +209,15 @@ public class MainPanel extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(55, 107, 746, 460);
 		contentPane.add(scrollPane);
-		
+
 		table = new JTable(model);
 		table.setGridColor(Color.BLACK);
 		table.setBackground(Color.WHITE);
@@ -233,22 +231,22 @@ public class MainPanel extends JFrame {
 		table.getColumnModel().getColumn(5).setPreferredWidth(150);
 		table.getColumnModel().getColumn(6).setPreferredWidth(150);
 		table.getColumnModel().getColumn(7).setPreferredWidth(150);
-		
+
 		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(1).setCellEditor(new EventCellEditor());
 
 		table.getColumnModel().getColumn(2).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(2).setCellEditor(new EventCellEditor());
-		
+
 		table.getColumnModel().getColumn(3).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(3).setCellEditor(new EventCellEditor());
-		
+
 		table.getColumnModel().getColumn(4).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(4).setCellEditor(new EventCellEditor());
-		
+
 		table.getColumnModel().getColumn(5).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(5).setCellEditor(new EventCellEditor());
-		
+
 		table.getColumnModel().getColumn(6).setCellRenderer(new EventCellRender());
 		table.getColumnModel().getColumn(6).setCellEditor(new EventCellEditor());
 
@@ -267,24 +265,24 @@ public class MainPanel extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(819, 107, 246, 366);
 		tabbedPane.add(appointment);
-	
-		
+
+
 		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
 		tabbedPane.add(participants);
-		
+
 		JList list2 = new JList(model.getParticipantsModel());
 		list2.setCellRenderer(new ParticipantsRenderer());
 		participants.add(list2);
 		list.setBounds(83, 89, 1, 1);
 		contentPane.add(tabbedPane);
-		
+
 		JButton btnNyAvtale = new JButton("Ny Avtale");
 		btnNyAvtale.setBounds(829, 485, 117, 29);
 		btnNyAvtale.addActionListener(app);
 		contentPane.add(btnNyAvtale);
-		
+
 		JButton btnLogout = new JButton("Logg ut");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -293,33 +291,40 @@ public class MainPanel extends JFrame {
 		});
 		btnLogout.setBounds(944, 8, 97, 25);
 		contentPane.add(btnLogout);
-		
-		final JComboBox personsComboBox = new JComboBox();
-		personsComboBox.setModel(new PersonComboBoxModel());
-		personsComboBox.setBounds(48, 624, 140, 27);
-		contentPane.add(personsComboBox);
-		
+
+			JPanel combo = personsComboBox.getContent();
+		combo.setBounds(40, 620, 190, 30);
+		combo.setVisible(true);
+		contentPane.add(combo);
 		JButton btnLeggTil = new JButton("Legg til");
-		btnLeggTil.addActionListener(new ActionListener(){
+		btnLeggTil.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				try {
-					model.addOtherPersonsAppointments((User) personsComboBox.getSelectedItem());
-				} catch (SQLException e) {
+					model.clear();
+				} catch (SQLException e2) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e2.printStackTrace();
 				}
-				
+				for (String username : personsComboBox.getSelectedPersons()) {
+					try {
+						model.addOtherPersonsAppointments(username);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
 			}
-			
 		});
-		btnLeggTil.setBounds(190, 623, 117, 29);
+
+		btnLeggTil.setBounds(220, 623, 117, 29);
 		contentPane.add(btnLeggTil);
-		
+
 		JLabel lblSeAndrePersoners = new JLabel("Se andre personers avtaler");
 		lblSeAndrePersoners.setBounds(55, 597, 177, 16);
 		contentPane.add(lblSeAndrePersoners);
-		
+
 	}
 }

@@ -11,79 +11,91 @@ import calendar.Database;
 import calendar.User;
 
 public class CheckCombo extends JComboBox implements ActionListener {
-	Database db = new Database();
+  Database db = new Database();
 
-	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox) e.getSource();
-		CheckComboStore store = (CheckComboStore) cb.getSelectedItem();
-		CheckComboRenderer ccr = (CheckComboRenderer) cb.getRenderer();
-		ccr.checkBox.setSelected((store.state = !store.state));
-	}
+  public CheckCombo() {
+	  setPreferredSize(new Dimension(170,30));
+}
 
-	JPanel getContent() throws SQLException {
-		ArrayList<User> names = new ArrayList<User>();
-		names = db.getAllUsers();
-		ArrayList<String> stringNames = new ArrayList<String>();
-		for (int i = 0; i < names.size(); i++) {
-			stringNames.add(names.get(i).getName());
-		}
 
-		String[] ids = new String[stringNames.size()];
-		Boolean[] values = new Boolean[stringNames.size()];
+  private ArrayList<String> selectedPersons = new ArrayList<String>();
 
-		for (int i = 0; i < stringNames.size(); i++) {
-			ids[i] = stringNames.get(i);
-			System.out.println(ids[i]);
-			values[i] = Boolean.FALSE;
+  public void actionPerformed(ActionEvent e) {
+    JComboBox cb = (JComboBox) e.getSource();
+    CheckComboStore store = (CheckComboStore) cb.getSelectedItem();
+    CheckComboRenderer ccr = (CheckComboRenderer) cb.getRenderer();
+    ccr.checkBox.setSelected((store.state = !store.state));
+    setSelectedPersons(store.id.getUsername(), store.state);
+  }
 
-		}
+  public void setSelectedPersons(String username, boolean selected) {
+	  if (selected) {
+		  selectedPersons.add(username);
+	  }
+	  else{
+		  selectedPersons.remove(username);
+	  }
+  }
 
-		CheckComboStore[] stores = new CheckComboStore[ids.length];
-		for (int j = 0; j < ids.length; j++)
-			stores[j] = new CheckComboStore(ids[j], values[j]);
-		JComboBox combo = new JComboBox(stores);
-		combo.setRenderer(new CheckComboRenderer());
-		combo.addActionListener(this);
-		JPanel panel = new JPanel();
-		panel.add(combo);
-		return panel;
-	}
+  public ArrayList<String> getSelectedPersons() {
+	return selectedPersons;
+}
 
-	public static void main(String[] args) throws SQLException {
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add(new CheckCombo().getContent());
-		f.setSize(300, 160);
-		f.setLocation(200, 200);
-		f.setVisible(true);
-	}
+  public JPanel getContent() throws SQLException {
+    ArrayList<User> names = new ArrayList<User>();
+    names = db.getAllUsers();
+    ArrayList<User> stringNames = new ArrayList<User>();
+    for (int i = 0; i < names.size(); i++) {
+      stringNames.add(names.get(i));
+    }
+
+    User[] ids = new User[stringNames.size()];
+    Boolean[] values = new Boolean[stringNames.size()];
+
+    for (int i = 0; i < stringNames.size(); i++) {
+      ids[i] = stringNames.get(i);
+      values[i] = Boolean.FALSE;
+
+    }
+
+    CheckComboStore[] stores = new CheckComboStore[ids.length];
+    for (int j = 0; j < ids.length; j++)
+      stores[j] = new CheckComboStore(ids[j], values[j]);
+    JComboBox combo = new JComboBox(stores);
+    combo.setRenderer(new CheckComboRenderer());
+    combo.addActionListener(this);
+    JPanel panel = new JPanel();
+    panel.add(combo);
+    return panel;
+  }
+
 }
 
 /** adapted from comment section of ListCellRenderer api */
 class CheckComboRenderer implements ListCellRenderer {
-	JCheckBox checkBox;
+  JCheckBox checkBox;
 
-	public CheckComboRenderer() {
-		checkBox = new JCheckBox();
-	}
+  public CheckComboRenderer() {
+    checkBox = new JCheckBox();
+  }
 
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean cellHasFocus) {
-		CheckComboStore store = (CheckComboStore) value;
-		checkBox.setText(store.id);
-		checkBox.setSelected(((Boolean) store.state).booleanValue());
-		checkBox.setBackground(isSelected ? Color.blue : Color.white);
-		checkBox.setForeground(isSelected ? Color.white : Color.black);
-		return checkBox;
-	}
+  public Component getListCellRendererComponent(JList list, Object value,
+      int index, boolean isSelected, boolean cellHasFocus) {
+    CheckComboStore store = (CheckComboStore) value;
+    checkBox.setText(store.id.toString());
+    checkBox.setSelected(((Boolean) store.state).booleanValue());
+    checkBox.setBackground(isSelected ? Color.blue : Color.white);
+    checkBox.setForeground(isSelected ? Color.white : Color.black);
+    return checkBox;
+  }
 }
 
 class CheckComboStore {
-	String id;
-	Boolean state;
+  User id;
+  Boolean state;
 
-	public CheckComboStore(String id, Boolean state) {
-		this.id = id;
-		this.state = state;
-	}
+  public CheckComboStore(User id, Boolean state) {
+    this.id = id;
+    this.state = state;
+  }
 }
