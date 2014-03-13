@@ -205,7 +205,14 @@ private String pwd = "gruppe16";
 		return stmt.executeQuery(query);
 	}
 	
-	public void removeVarsel(int avtaleID, String username) throws SQLException {
+	public void setNotification (int avtaleID, String brukernavn, String meld) throws SQLException {
+		stmt = con.createStatement();
+		String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst) VALUES('" +
+		avtaleID + "', '" + brukernavn + "', '" + meld + "');";
+		stmt.execute(query);
+	}
+	
+	public void removeNotification(int avtaleID, String username) throws SQLException {
 		stmt = con.createStatement();
 		String query = "DELETE FROM Varsel WHERE AvtaleID = '" + avtaleID + 
 				"' AND Brukernavn = '" + username + "';";

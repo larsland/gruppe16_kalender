@@ -55,7 +55,7 @@ public class Notification {
 	}
 	
 	public void removeNoti(int index) {
-		//db.removeVarsel(notAvtaleID.get(index), username);
+		//db.removeNotification(notAvtaleID.get(index), username);
 		notAvtaleID.remove(index);
 		notMessages.remove(index);
 		notTime.remove(index);

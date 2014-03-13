@@ -118,8 +118,6 @@ public class MainPanel extends JFrame {
                 notList.addListSelectionListener(this);
                 
                 btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
-                // AvtaleID for selected avtale = notification.getNotAvtaleID().get(notList.getSelectedIndex());
-                //set correct eventPanel and delete notification from db
             }
 		});
 		
@@ -133,7 +131,7 @@ public class MainPanel extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
                 int x = 29;
                 int y = 21;
-	            if (notification.getNotAvtaleID().size() > 0) {    
+	            if (notification.getNotAvtaleID().size() > 0) {  
                 	notPanel.show(btnNoti, x, y);
 					notPanel.setVisible(true);
 	            }
