@@ -71,39 +71,8 @@ public class EventBox extends JButton implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		CalendarModel.getListModel().removeAllElements();
-		CalendarModel.getParticipantsModel().removeAllElements();
-		ResultSet rs;
-		ResultSet rs2;
-		try {
-			rs = db.getAppointmentInfo(appId);
-			rs2 = db.getParticipantsInAppointment(appId);
-			while (rs.next()) {
-				CalendarModel.getListModel().addElement("Start: " + rs.getString("Starttid"));
-				CalendarModel.getListModel().addElement("Slutt: " + rs.getString("Sluttid"));
-				CalendarModel.getListModel().addElement("Beskrivelse: " + rs.getString("Beskrivelse"));
-				
-				if (rs.getString("Opprettet_av").equals(this.username)) {
-				}
-
-
-				ArrayList<Object> label = new ArrayList<Object>();
-				label.add(rs.getString("Opprettet_av"));
-				label.add(1);
-				CalendarModel.getParticipantsModel().addElement(label);
-			}
-			while (rs2.next()) {
-				ArrayList<Object> label = new ArrayList<Object>();
-				label.add(rs2.getString("brukernavn"));
-				label.add(rs2.getInt("Godkjenning"));
-				
-				CalendarModel.getParticipantsModel().addElement(label);
-				
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-
+		int appId = ((EventBox) e.getSource()).appId;
+		CalendarModel.fillSidePanel(appId);
 	}
 
 }

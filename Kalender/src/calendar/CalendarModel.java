@@ -3,11 +3,11 @@ package calendar;
 import gui.EventBox;
 import gui.MainPanel;
 
-
 import java.io.SerializablePermission;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
@@ -22,8 +22,8 @@ public class CalendarModel extends DefaultTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String username = null;
-	private Database db = new Database();
+	private static String username = null;
+	private static Database db = new Database();
 	private LocalDate now = new LocalDate();
 	private LocalDate monday = now.withDayOfWeek(DateTimeConstants.MONDAY);
 	private LocalDate sunday = now.withDayOfWeek(DateTimeConstants.SUNDAY);
@@ -213,6 +213,41 @@ public class CalendarModel extends DefaultTableModel {
 		insertIntoCalendar(rs2,true);
 		this.fireTableDataChanged();
 		
+	}
+	
+	public static void fillSidePanel(int appId){
+		CalendarModel.getListModel().removeAllElements();
+		CalendarModel.getParticipantsModel().removeAllElements();
+		ResultSet rs;
+		ResultSet rs2;
+		try {
+			rs = db.getAppointmentInfo(appId);
+			rs2 = db.getParticipantsInAppointment(appId);
+			while (rs.next()) {
+				CalendarModel.getListModel().addElement("Start: " + rs.getString("Starttid"));
+				CalendarModel.getListModel().addElement("Slutt: " + rs.getString("Sluttid"));
+				CalendarModel.getListModel().addElement("Beskrivelse: " + rs.getString("Beskrivelse"));
+				
+				if (rs.getString("Opprettet_av").equals(username)) {
+				}
+
+
+				ArrayList<Object> label = new ArrayList<Object>();
+				label.add(rs.getString("Opprettet_av"));
+				label.add(1);
+				CalendarModel.getParticipantsModel().addElement(label);
+			}
+			while (rs2.next()) {
+				ArrayList<Object> label = new ArrayList<Object>();
+				label.add(rs2.getString("brukernavn"));
+				label.add(rs2.getInt("Godkjenning"));
+				
+				CalendarModel.getParticipantsModel().addElement(label);
+				
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	@Override
