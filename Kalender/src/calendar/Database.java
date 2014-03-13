@@ -198,7 +198,19 @@ private String pwd = "gruppe16";
 	}
 
 	
+	public ResultSet getNotifications(String username) throws SQLException {
+		stmt = con.createStatement();
+		String query = "SELECT AvtaleID, Meldingstekst, tid FROM Varsel WHERE" +
+				" Brukernavn = '" + username + "';";
+		return stmt.executeQuery(query);
+	}
 	
+	public void removeVarsel(int avtaleID, String username) throws SQLException {
+		stmt = con.createStatement();
+		String query = "DELETE FROM Varsel WHERE AvtaleID = '" + avtaleID + 
+				"' AND Brukernavn = '" + username + "';";
+		stmt.executeUpdate(query);
+	}
 	
 	
 }
