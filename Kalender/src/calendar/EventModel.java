@@ -14,9 +14,10 @@ import javax.swing.event.ListDataListener;
 public class EventModel extends DefaultListModel{
 	
 	private String desc;
-	private Date date;
-	private String start;
-	private String end;
+	private String date;
+	private String location;
+	private Timestamp start;
+	private Timestamp end;
 	private ArrayList<User> participants;
 	private User creator = new User();
 	
@@ -24,7 +25,7 @@ public class EventModel extends DefaultListModel{
 		
 	}
 	
-	public EventModel(String desc, Date date, String start, String end, User creator) {
+	public EventModel(String desc, String date, Timestamp start, Timestamp end, User creator) {		
 		setDate(date);
 		setDesc(desc);
 		setStart(start);
@@ -39,26 +40,24 @@ public class EventModel extends DefaultListModel{
 		this.desc = desc;
 	}
 	
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(java.util.Date date) {
-		java.util.Date utlDate = date;
-		java.sql.Date sqlDate = new java.sql.Date(utlDate.getTime());
-		this.date = sqlDate;
+	public void setDate(String date) {
+		this.date = date;
 	}				
 	
-	public String getStart() {
+	public Timestamp getStart() {
 		return start;
 	}
-	public void setStart(String start) {
+	public void setStart(Timestamp start) {
 		this.start = start;
 	}
 	
-	public String getEnd() {
+	public Timestamp getEnd() {
 		return end;
 	}
-	public void setEnd(String end) {
+	public void setEnd(Timestamp end) {
 		this.end = end;
 	}
 	
@@ -74,6 +73,12 @@ public class EventModel extends DefaultListModel{
 	}
 	public void setCreator(User creator) {
 		this.creator = creator;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 	
