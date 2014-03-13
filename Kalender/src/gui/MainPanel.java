@@ -20,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JEditorPane;
 import javax.swing.JComboBox;
@@ -41,14 +42,18 @@ import java.awt.Insets;
 
 import java.awt.Button;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
 import calendar.App;
 import calendar.CalendarModel;
+import calendar.Notification;
 import calendar.User;
 
 import javax.swing.JList;
@@ -73,6 +78,10 @@ public class MainPanel extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	private JPopupMenu notPanel;
+	private JList notList;
+	private Notification notification;
+	private JButton btnNoti;
 	
 
 	/**
@@ -82,6 +91,7 @@ public class MainPanel extends JFrame {
 	public MainPanel(final String username) throws SQLException {
 		this.username = username;
 		this.model = new CalendarModel(username);
+		this.notification = new Notification(username);
 		setTitle("Min kalender - " + username);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1071, 768);
@@ -91,14 +101,39 @@ public class MainPanel extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton button = new JButton("0");
-		button.setForeground(Color.BLACK);
-		button.addActionListener(new ActionListener() {
+		
+		notPanel = new JPopupMenu();
+		notPanel.setLayout(new BorderLayout());
+		ArrayList<String> notArray = notification.getNotMessages();
+		notList = new JList(notArray.toArray());
+		
+		notList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                notPanel.setVisible(false);
+                notification.removeNoti(notList.getSelectedIndex());
+                btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
+                // AvtaleID for selected avtale = notification.getNotAvtaleID().get(notList.getSelectedIndex());
+                //set correct eventPanel and delete notification from db
+            }
+		});
+		
+		notPanel.add(notList);
+		notPanel.setVisible(false);
+		contentPane.add(notPanel);
+		
+		btnNoti = new JButton(notArray.size() + "");
+		btnNoti.setForeground(Color.BLACK);
+		btnNoti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+                int x = 29;
+                int y = 21;
+                notPanel.show(btnNoti, x, y);
+				notPanel.setVisible(true);
 			}
 		});
-		button.setBounds(6, 6, 37, 29);
-		contentPane.add(button);
+		btnNoti.setBounds(6, 6, 45, 29);
+		contentPane.add(btnNoti);
 		
 		JButton btnNewButton = new JButton("Forrige uke");
 		btnNewButton.addActionListener(new ActionListener() {
