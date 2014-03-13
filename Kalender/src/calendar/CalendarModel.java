@@ -138,10 +138,10 @@ public class CalendarModel extends DefaultTableModel {
 	 * TODO: Sette farge
 	 * TODO: Beholde avtalen i kalenderen når man blar mellom uker
 	 */
-	public void addOtherPersonsAppointments(User u) throws SQLException {
-		ResultSet rs = db.getCreatedAppointments(u.getUsername(), _monday, _sunday);
+	public void addOtherPersonsAppointments(String u) throws SQLException {
+		ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
 		insertIntoCalendar(rs,true);
-		ResultSet rs2 = db.getInvitedAppointments(u.getUsername(), _monday, _sunday);
+		ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
 		insertIntoCalendar(rs2,true);
 		this.fireTableDataChanged();
 
