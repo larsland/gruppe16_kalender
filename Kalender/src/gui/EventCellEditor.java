@@ -19,7 +19,7 @@ public class EventCellEditor extends AbstractCellEditor implements TableCellEdit
 
 	@Override
 	public void cancelCellEditing() {
-		  super.cancelCellEditing();
+		super.cancelCellEditing();
 
 	}
 

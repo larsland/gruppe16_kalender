@@ -3,28 +3,15 @@ package calendar;
 import gui.EventBox;
 import gui.MainPanel;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+
+import java.io.SerializablePermission;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -43,8 +30,8 @@ public class CalendarModel extends DefaultTableModel {
 	private static DefaultListModel listModel = new EventModel();
 	private static DefaultListModel participantsModel = new DefaultListModel();
 	private static JPanel appointment = new JPanel();
-	Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
-	Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
+	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
+	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
 	
 	public static DefaultListModel getListModel() {
 		return listModel;
@@ -56,6 +43,17 @@ public class CalendarModel extends DefaultTableModel {
 	public static JPanel getAppointment() {
 		return appointment;
 	}
+	
+	
+	public String getDateString(int day){
+		if (day == 1) {
+			return _monday.getDate() + "/" + (_monday.getMonth() + 1);
+		}
+		Timestamp tmpDate = new Timestamp(_monday.getYear(), _monday.getMonth(), _monday.getDate(), 0, 0, 0, 0);
+		tmpDate.setDate(tmpDate.getDate() + (day - 1));
+		return (tmpDate.getDate()) + "/" + (tmpDate.getMonth() + 1);
+	}
+
 
 	public CalendarModel(String username) throws SQLException {
 		super(new Object[][] {
@@ -97,12 +95,12 @@ public class CalendarModel extends DefaultTableModel {
 			_sunday.setDate(_sunday.getDate() - 7);
 		}
 		ResultSet rs = db.getCreatedAppointments(username, _monday, _sunday);
-		insertIntoCalendar(rs);
+		insertIntoCalendar(rs,false);
 		ResultSet rs2 = db.getInvitedAppointments(username, _monday, _sunday);
-		insertIntoCalendar(rs2);
+		insertIntoCalendar(rs2,false);
 	}
 	
-	public void insertIntoCalendar(ResultSet rs) throws SQLException{
+	public void insertIntoCalendar(ResultSet rs, boolean otherPerson) throws SQLException{
 		while (rs.next()) {
 			int day = rs.getTimestamp("Starttid").getDay();
 			int hour = rs.getTimestamp("Starttid").getHours();
@@ -136,7 +134,7 @@ public class CalendarModel extends DefaultTableModel {
 	
 	public void setMonday(Object value, int time) throws SQLException{
 		time = time - 7;
-		if (!(value instanceof JPanel)) {
+		if (value instanceof Integer) {
 			((JPanel) this.getValueAt(time, 1)).add(new EventBox("",(Integer) value, username));
 		}
 		else{
@@ -189,21 +187,39 @@ public class CalendarModel extends DefaultTableModel {
 		}
 	}
 	public void clear() throws SQLException{
+
 		listModel.removeAllElements();
-		for (int i = 7; i <= 24; i++) {
-			setMonday(new JPanel(), i);
-			setTuesday(new JPanel(), i);
-			setWednesday(new JPanel(), i);
-			setThursday(new JPanel(),i);
-			setFriday(new JPanel(), i);
-			setSaturday(new JPanel(), i);
-			setSunday(new JPanel(), i);
+		
+		// Fjern alle objekter i JPanel Cell
+		for (int i = 1; i < getRowCount(); i++) {
+			for (int j = 1; j < getColumnCount();j++) {
+				((JPanel) this.getValueAt(i, j)).removeAll();
+			}
 		}
+		
+		// Oppdater tabell
+		this.fireTableDataChanged();
+	}
+	
+	/*
+	 * TODO: Finne ut om bruker selv deltar pŒ avtalen
+	 * TODO: Sette farge
+	 * TODO: Beholde avtalen i kalenderen nŒr man blar mellom uker
+	 */
+	public void addOtherPersonsAppointments(User u) throws SQLException {
+		ResultSet rs = db.getCreatedAppointments(u.getUsername(), _monday, _sunday);
+		insertIntoCalendar(rs,true);
+		ResultSet rs2 = db.getInvitedAppointments(u.getUsername(), _monday, _sunday);
+		insertIntoCalendar(rs2,true);
+		this.fireTableDataChanged();
+		
 	}
 	
 	@Override
 	public boolean isCellEditable(int row, int coloumn){
 		return true;
 	}
+	
+
 
 }

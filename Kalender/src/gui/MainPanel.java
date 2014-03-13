@@ -49,6 +49,7 @@ import javax.swing.JSplitPane;
 
 import calendar.App;
 import calendar.CalendarModel;
+import calendar.User;
 
 import javax.swing.JList;
 import javax.swing.JTextPane;
@@ -62,6 +63,13 @@ public class MainPanel extends JFrame {
 	private static JPanel appointment;
 	private static JPanel participants;
 	private static App app = new App();
+	private final JLabel lblMandag;
+	private final JLabel lblTirsdag;
+	private final JLabel lblOnsdag;
+	private final JLabel lblTorsdag;
+	private final JLabel lblFredag;
+	private final JLabel lblLrdag;
+	private final JLabel lblSndag;
 	/**
 	 * Launch the application.
 	 */
@@ -97,6 +105,14 @@ public class MainPanel extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					model.setThisWeeksAppointments(-1);
+					lblMandag.setText(model.getDateString(1));
+					lblTirsdag.setText(model.getDateString(2));
+					lblOnsdag.setText(model.getDateString(3));
+					lblTorsdag.setText(model.getDateString(4));
+					lblFredag.setText(model.getDateString(5));
+					lblLrdag.setText(model.getDateString(6));
+					lblSndag.setText(model.getDateString(7));
+					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -106,31 +122,31 @@ public class MainPanel extends JFrame {
 		btnNewButton.setBounds(48, 47, 117, 29);
 		contentPane.add(btnNewButton);
 		
-		JLabel lblMandag = new JLabel("Mandag");
+		lblMandag = new JLabel(model.getDateString(1));
 		lblMandag.setBounds(127, 88, 61, 16);
 		contentPane.add(lblMandag);
 		
-		JLabel lblTirsdag = new JLabel("Tirsdag");
+		lblTirsdag = new JLabel(model.getDateString(2));
 		lblTirsdag.setBounds(223, 88, 61, 16);
 		contentPane.add(lblTirsdag);
 		
-		JLabel lblOnsdag = new JLabel("Onsdag");
+		lblOnsdag = new JLabel(model.getDateString(3));
 		lblOnsdag.setBounds(316, 88, 61, 16);
 		contentPane.add(lblOnsdag);
 		
-		JLabel lblTorsdag = new JLabel("Torsdag");
+		lblTorsdag = new JLabel(model.getDateString(4));
 		lblTorsdag.setBounds(412, 88, 61, 16);
 		contentPane.add(lblTorsdag);
 		
-		JLabel lblFredag = new JLabel("Fredag");
+		lblFredag = new JLabel(model.getDateString(5));
 		lblFredag.setBounds(510, 88, 61, 16);
 		contentPane.add(lblFredag);
 		
-		JLabel lblLrdag = new JLabel("L\u00F8rdag");
+		lblLrdag = new JLabel(model.getDateString(6));
 		lblLrdag.setBounds(603, 88, 61, 16);
 		contentPane.add(lblLrdag);
 		
-		JLabel lblSndag = new JLabel("S\u00F8ndag");
+		lblSndag = new JLabel(model.getDateString(7));
 		lblSndag.setBounds(704, 88, 61, 16);
 		contentPane.add(lblSndag);
 		
@@ -144,6 +160,13 @@ public class MainPanel extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					model.setThisWeeksAppointments(1);
+					lblMandag.setText(model.getDateString(1));
+					lblTirsdag.setText(model.getDateString(2));
+					lblOnsdag.setText(model.getDateString(3));
+					lblTorsdag.setText(model.getDateString(4));
+					lblFredag.setText(model.getDateString(5));
+					lblLrdag.setText(model.getDateString(6));
+					lblSndag.setText(model.getDateString(7));
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -209,7 +232,6 @@ public class MainPanel extends JFrame {
 		JList list = new JList(model.getListModel());
 		list.setBounds(83, 89, 1, 1);
 		appointment.add(list);
-		appointment.add(new JButton("Fjern"));
 		tabbedPane.add(participants);
 		
 		JList list2 = new JList(model.getParticipantsModel());
@@ -232,6 +254,32 @@ public class MainPanel extends JFrame {
 		btnLogout.setBounds(944, 8, 97, 25);
 		contentPane.add(btnLogout);
 		
+		final JComboBox personsComboBox = new JComboBox();
+		personsComboBox.setModel(new PersonComboBoxModel());
+		personsComboBox.setBounds(48, 624, 140, 27);
+		contentPane.add(personsComboBox);
+		
+		JButton btnLeggTil = new JButton("Legg til");
+		btnLeggTil.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					model.addOtherPersonsAppointments((User) personsComboBox.getSelectedItem());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
+		btnLeggTil.setBounds(190, 623, 117, 29);
+		contentPane.add(btnLeggTil);
+		
+		JLabel lblSeAndrePersoners = new JLabel("Se andre personers avtaler");
+		lblSeAndrePersoners.setBounds(55, 597, 177, 16);
+		contentPane.add(lblSeAndrePersoners);
+		
 	}
-	
 }
