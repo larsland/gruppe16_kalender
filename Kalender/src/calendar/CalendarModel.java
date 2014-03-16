@@ -33,7 +33,7 @@ public class CalendarModel extends DefaultTableModel {
 	private static JPanel appointment = new JPanel();
 	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
-	private ArrayList<String> otherPersons = new ArrayList<String>();
+	private ArrayList<User> otherPersons = new ArrayList<User>();
 
 	public static DefaultListModel getListModel() {
 		return listModel;
@@ -49,7 +49,10 @@ public class CalendarModel extends DefaultTableModel {
 	public static String getUsername() {
 		return username;
 	}
-
+	
+	public Timestamp get_monday() {
+		return _monday;
+	}
 
 	public String getDateString(int day){
 		if (day == 1) {
@@ -109,7 +112,7 @@ public class CalendarModel extends DefaultTableModel {
 		for (int i = 0; i < otherPersons.size(); i++) {
 			if(otherPersons.get(i).equals(this.getUsername())){continue;}
 			try {
-				addOtherPersonsAppointments(otherPersons.get(i), personColors[i]);
+				addOtherPersonsAppointments(otherPersons.get(i).getUsername(), personColors[i]);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -207,7 +210,7 @@ public class CalendarModel extends DefaultTableModel {
 		return true;
 	}
 
-	public void setOtherPersons(ArrayList<String> selectedPersons) {
+	public void setOtherPersons(ArrayList<User> selectedPersons) {
 		this.otherPersons = selectedPersons;
 	}
 

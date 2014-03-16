@@ -21,10 +21,12 @@ import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 
 import com.toedter.calendar.JDateChooser;
+
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,11 +43,17 @@ import javax.swing.JSeparator;
 import javax.swing.JScrollBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
+
 import calendar.Database;
 import calendar.EventModel;
+import calendar.Room;
+import calendar.User;
+
 import javax.swing.table.DefaultTableModel;
+
 import com.toedter.calendar.JDayChooser;
 import com.toedter.calendar.JCalendar;
+
 import javax.swing.SpinnerNumberModel;
 
 public class AddEvent extends JFrame {
@@ -71,12 +79,18 @@ public class AddEvent extends JFrame {
 	private ArrayList rooms;
 	private String[] init = {""};
 	private JScrollPane selectedMemberListScroll;
+	private String username;
+	
+	public String getUsername() {
+		return username;
+	}
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame = new AddEvent();
+					frame = new AddEvent("andekol");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,7 +99,8 @@ public class AddEvent extends JFrame {
 		});
 	}
 
-	public AddEvent() throws SQLException {
+	public AddEvent(String username) throws SQLException {
+		this.username = username;
 		numMembers = db.getAllUsers().size();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -320,8 +335,21 @@ public class AddEvent extends JFrame {
 		
 	class Save implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getStartStamp().getHours(), getStartStamp().getMinutes(), 0, 0);
+			Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
+			ArrayList<String> participants = new ArrayList<String>();
+			java.sql.Date dateSql = new java.sql.Date(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate());
+			for (User u : memberList.getSelectedPersons()) {
+				participants.add(u.getUsername());
+			}
 			if (!txtLocation.isVisible()) {
 				event = new EventModel(cbRoom.getSelectedItem().toString(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
+				try {
+					db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, ((Room) cbRoom.getSelectedItem()).getRoomID());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			else if (txtLocation.isVisible()) {
 				event = new EventModel(txtLocation.getText(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());

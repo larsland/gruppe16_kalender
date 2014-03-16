@@ -5,6 +5,7 @@ import gui.LogInPanel;
 import gui.MainPanel;
 import gui.RegisterPane;
 
+import java.awt.EventQueue;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -27,13 +28,17 @@ public class App implements ActionListener {
 	private static JFrame registerFrame;
 	private static JFrame mainFrame;
 	private static JFrame newAppointmentFrame;
+	
+	public static String getUsername() {
+		return username;
+	}
 
 
 	public static void main(String[] args) throws SQLException{
-		//loginFrame = new LogInPanel();
-		//loginFrame.setVisible(true);
-		mainFrame = new MainPanel("andekol");
-		mainFrame.setVisible(true);
+		loginFrame = new LogInPanel();
+		loginFrame.setVisible(true);
+//		mainFrame = new MainPanel("andekol");
+//		mainFrame.setVisible(true);
 	}
 
 	public void validateUser(String username, String password) throws SQLException, LineUnavailableException, UnsupportedAudioFileException, IOException{
@@ -85,14 +90,29 @@ public class App implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		try {
-			newAppointmentFrame = new AddEvent();
+	/*	try {
+			newAppointmentFrame = new AddEvent(this.username);
 			newAppointmentFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		newAppointmentFrame.setVisible(true);
+		newAppointmentFrame.setVisible(true);*/
+		EventQueue.invokeLater(new Runnable() {
+
+			public void run() {
+				try {
+					newAppointmentFrame = new AddEvent(getUsername());
+					newAppointmentFrame.setVisible(true);
+					newAppointmentFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+		
 	}
 
 

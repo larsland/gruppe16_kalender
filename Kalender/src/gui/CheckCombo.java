@@ -18,17 +18,17 @@ public class CheckCombo extends JComboBox implements ActionListener {
 }
 
 
-  private ArrayList<String> selectedPersons = new ArrayList<String>();
+  private ArrayList<User> selectedPersons = new ArrayList<User>();
 
   public void actionPerformed(ActionEvent e) {
     JComboBox cb = (JComboBox) e.getSource();
     CheckComboStore store = (CheckComboStore) cb.getSelectedItem();
     CheckComboRenderer ccr = (CheckComboRenderer) cb.getRenderer();
     ccr.checkBox.setSelected((store.state = !store.state));
-    setSelectedPersons(store.id.getUsername(), store.state);
+    setSelectedPersons(store.id, store.state);
   }
 
-  public void setSelectedPersons(String username, boolean selected) {
+  public void setSelectedPersons(User username, boolean selected) {
 	  if (selected) {
 		  selectedPersons.add(username);
 	  }
@@ -37,7 +37,7 @@ public class CheckCombo extends JComboBox implements ActionListener {
 	  }
   }
 
-  public ArrayList<String> getSelectedPersons() {
+  public ArrayList<User> getSelectedPersons() {
 	return selectedPersons;
 }
 

@@ -71,6 +71,8 @@ import javax.swing.JTextPane;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class MainPanel extends JFrame {
 
@@ -95,6 +97,7 @@ public class MainPanel extends JFrame {
 	private JButton btnNoti;
 	private DefaultListModel otherPersonsListModel = new DefaultListModel();
 	private Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
+	private JLabel lblDato;
 
 
 	/**
@@ -358,8 +361,8 @@ public class MainPanel extends JFrame {
 				}
 				for (int i = 0; i < personsComboBox.getSelectedPersons().size(); i++) {
 					try {
-						if(personsComboBox.getSelectedPersons().get(i).equals(model.getUsername())){continue;}
-						model.addOtherPersonsAppointments(personsComboBox.getSelectedPersons().get(i), personColors[i]);
+						if(personsComboBox.getSelectedPersons().get(i).getUsername().equals(model.getUsername())){continue;}
+						model.addOtherPersonsAppointments(personsComboBox.getSelectedPersons().get(i).getUsername(), personColors[i]);
 						ArrayList<Object> personAndColor = new ArrayList<Object>();
 						personAndColor.add(personsComboBox.getSelectedPersons().get(i));
 						personAndColor.add(personColors[i]);
@@ -384,8 +387,21 @@ public class MainPanel extends JFrame {
 		otherPersonsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		otherPersonsList.setVisibleRowCount(2);
 		otherPersonsList.setBackground(new Color(238,238,238));
-		otherPersonsList.setBounds(50, 650, 735, 30);
+		otherPersonsList.setBounds(50, 650, 735, 50);
 		contentPane.add(otherPersonsList);
+		
+		JLabel lblNewLabel = new JLabel(this.username);
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 16));
+		lblNewLabel.setBackground(Color.GREEN);
+		lblNewLabel.setOpaque(true);
+		lblNewLabel.setBounds(56, 572, 117, 16);
+		contentPane.add(lblNewLabel);
+		
+		lblDato = new JLabel();
+		lblDato.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDato.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		lblDato.setBounds(325, 50, 196, 16);
+		contentPane.add(lblDato);
 		
 		
 

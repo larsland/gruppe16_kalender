@@ -20,14 +20,14 @@ public class EventModel extends DefaultListModel{
 	private String location;
 	private Timestamp start;
 	private Timestamp end;
-	private ArrayList<String> participants;
+	private ArrayList<User> participants;
 	private User creator = new User();
 	
 	public EventModel(){
 		
 	}
 	
-	public EventModel(String location, String desc, String date, Timestamp start, Timestamp end, ArrayList<String> participants) {		
+	public EventModel(String location, String desc, String date, Timestamp start, Timestamp end, ArrayList<User> participants) {		
 		setLocation(location);
 		setDate(date);
 		setDesc(desc);
@@ -36,7 +36,7 @@ public class EventModel extends DefaultListModel{
 		setParticipants(participants);
 	}
 	
-	public EventModel(Object room, String desc, String date, Timestamp start, Timestamp end, ArrayList<String> participants) {		
+	public EventModel(Object room, String desc, String date, Timestamp start, Timestamp end, ArrayList<User> participants) {		
 		setRoom(room);
 		setDate(date);
 		setDesc(desc);
@@ -73,10 +73,10 @@ public class EventModel extends DefaultListModel{
 		this.end = end;
 	}
 	
-	public ArrayList<String> getParticipants() {
+	public ArrayList<User> getParticipants() {
 		return participants;
 	}
-	public void setParticipants(ArrayList<String> participants) {
+	public void setParticipants(ArrayList<User> participants) {
 		this.participants = participants;
 	}
 	
