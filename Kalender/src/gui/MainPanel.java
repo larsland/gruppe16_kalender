@@ -1,8 +1,15 @@
 package gui;
 
+import java.applet.AudioClip;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
+import javax.print.DocFlavor.URL;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -41,8 +48,11 @@ import java.awt.Insets;
 //import com.jgoodies.forms.layout.RowSpec;
 
 import java.awt.Button;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.LineBorder;
@@ -58,6 +68,9 @@ import calendar.User;
 
 import javax.swing.JList;
 import javax.swing.JTextPane;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class MainPanel extends JFrame {
 
@@ -80,11 +93,16 @@ public class MainPanel extends JFrame {
 	private JList notList;
 	private Notification notification;
 	private JButton btnNoti;
+	private DefaultListModel otherPersonsListModel = new DefaultListModel();
+	private Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
 
 
 	/**
 	 * Create the frame.
 	 * @throws SQLException
+	 * @throws LineUnavailableException 
+	 * @throws IOException 
+	 * @throws UnsupportedAudioFileException 
 	 */
 	public MainPanel(final String username) throws SQLException {
 		this.username = username;
@@ -103,6 +121,7 @@ public class MainPanel extends JFrame {
 		notPanel = new JPopupMenu();
 		notPanel.setLayout(new BorderLayout());
 		notList = new JList(notification.getNotMessages().toArray());
+		
 
 		notList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -118,6 +137,17 @@ public class MainPanel extends JFrame {
                 btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
             }
 		});
+		
+		if (notification.getNotAvtaleID().size() > 0) {
+			       try{
+			    	   java.net.URL url = getClass().getResource("/sounds/notification.mp3");
+			    	   AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+			    	   Clip clip = AudioSystem.getClip();
+			    	   clip.open(ais);
+			    }
+			   catch(Exception ex)
+			   {  System.out.println(ex);}
+		}
 
 		notPanel.add(notList);
 		notPanel.setVisible(false);
@@ -152,7 +182,6 @@ public class MainPanel extends JFrame {
 					lblSndag.setText(model.getDateString(7));
 
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -206,7 +235,6 @@ public class MainPanel extends JFrame {
 					lblLrdag.setText(model.getDateString(6));
 					lblSndag.setText(model.getDateString(7));
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -221,41 +249,56 @@ public class MainPanel extends JFrame {
 		table = new JTable(model);
 		table.setGridColor(Color.BLACK);
 		table.setBackground(Color.WHITE);
-		table.setCellSelectionEnabled(false);
-		table.setRowSelectionAllowed(false);
-		table.setColumnSelectionAllowed(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(150);
-		table.getColumnModel().getColumn(2).setPreferredWidth(150);
-		table.getColumnModel().getColumn(3).setPreferredWidth(150);
-		table.getColumnModel().getColumn(4).setPreferredWidth(150);
-		table.getColumnModel().getColumn(5).setPreferredWidth(150);
-		table.getColumnModel().getColumn(6).setPreferredWidth(150);
-		table.getColumnModel().getColumn(7).setPreferredWidth(150);
-
-		table.getColumnModel().getColumn(1).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(1).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(2).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(2).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(3).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(3).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(4).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(4).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(5).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(5).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(6).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(6).setCellEditor(new EventCellEditor());
-
-		table.getColumnModel().getColumn(7).setCellRenderer(new EventCellRender());
-		table.getColumnModel().getColumn(7).setCellEditor(new EventCellEditor());
-
-		table.setRowHeight(50);
+		table.setCellSelectionEnabled(true);
 		table.setRowSelectionAllowed(true);
-	    table.setColumnSelectionAllowed(false);
+		table.setColumnSelectionAllowed(true);
+		
+		for (int i = 1; i < 8; i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(150);
+			table.getColumnModel().getColumn(i).setCellRenderer(new EventCellRender());
+			table.getColumnModel().getColumn(i).setCellEditor(new EventCellEditor());
+		}
+		
+		
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JTable target = (JTable) e.getSource();
+				System.out.println(target.getSelectedColumn() + " , " + target.getSelectedRow());
+				model.getListModel().removeAllElements();
+				model.getParticipantsModel().removeAllElements();
+				
+			}
+		});
+
+		table.setRowHeight(55);
+		table.setRowSelectionAllowed(true);
+	    table.setColumnSelectionAllowed(true);
 
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
@@ -296,35 +339,55 @@ public class MainPanel extends JFrame {
 		combo.setBounds(40, 620, 190, 30);
 		combo.setVisible(true);
 		contentPane.add(combo);
-		JButton btnLeggTil = new JButton("Legg til");
+		JButton btnLeggTil = new JButton("Ok");
 		btnLeggTil.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				model.setOtherPersons(personsComboBox.getSelectedPersons());
+				otherPersonsListModel.removeAllElements();
 				try {
 					model.clear();
 				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				for (String username : personsComboBox.getSelectedPersons()) {
+				try {
+					model.addOtherPersonsAppointments(model.getUsername(), Color.green);
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+				for (int i = 0; i < personsComboBox.getSelectedPersons().size(); i++) {
 					try {
-						model.addOtherPersonsAppointments(username);
+						if(personsComboBox.getSelectedPersons().get(i).equals(model.getUsername())){continue;}
+						model.addOtherPersonsAppointments(personsComboBox.getSelectedPersons().get(i), personColors[i]);
+						ArrayList<Object> personAndColor = new ArrayList<Object>();
+						personAndColor.add(personsComboBox.getSelectedPersons().get(i));
+						personAndColor.add(personColors[i]);
+						otherPersonsListModel.addElement(personAndColor);
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
 				}
+				
 			}
 		});
 
-		btnLeggTil.setBounds(220, 623, 117, 29);
+		btnLeggTil.setBounds(233, 622, 87, 29);
 		contentPane.add(btnLeggTil);
 
 		JLabel lblSeAndrePersoners = new JLabel("Se andre personers avtaler");
 		lblSeAndrePersoners.setBounds(55, 597, 177, 16);
 		contentPane.add(lblSeAndrePersoners);
+
+		JList otherPersonsList = new JList(otherPersonsListModel);
+		otherPersonsList.setCellRenderer(new OtherPersonRenderer());
+		otherPersonsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		otherPersonsList.setVisibleRowCount(2);
+		otherPersonsList.setBackground(new Color(238,238,238));
+		otherPersonsList.setBounds(50, 650, 735, 30);
+		contentPane.add(otherPersonsList);
+		
+		
 
 	}
 }

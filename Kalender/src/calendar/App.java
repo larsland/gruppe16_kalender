@@ -6,17 +6,23 @@ import gui.MainPanel;
 import gui.RegisterPane;
 
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class App implements ActionListener {
 
 	private Database db = new Database();
-	private static String username = null;
+	public static String username = null;
 	private static JFrame loginFrame;
 	private static JFrame registerFrame;
 	private static JFrame mainFrame;
@@ -24,13 +30,13 @@ public class App implements ActionListener {
 
 
 	public static void main(String[] args) throws SQLException{
-//		loginFrame = new LogInPanel();
-//		loginFrame.setVisible(true);
-mainFrame = new MainPanel("andekol");
-mainFrame.setVisible(true);
+		//loginFrame = new LogInPanel();
+		//loginFrame.setVisible(true);
+		mainFrame = new MainPanel("andekol");
+		mainFrame.setVisible(true);
 	}
 
-	public void validateUser(String username, String password) throws SQLException{
+	public void validateUser(String username, String password) throws SQLException, LineUnavailableException, UnsupportedAudioFileException, IOException{
 		if (db.checkPass(username, password)) {
 			mainFrame = new MainPanel(username);
 			this.username = username;
@@ -71,9 +77,11 @@ mainFrame.setVisible(true);
 		}
 	}
 
+
 	public static JFrame getMainFrame() {
 		return mainFrame;
 	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

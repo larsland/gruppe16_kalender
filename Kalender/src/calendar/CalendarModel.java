@@ -3,6 +3,7 @@ package calendar;
 import gui.EventBox;
 import gui.MainPanel;
 
+import java.awt.Color;
 import java.io.SerializablePermission;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ public class CalendarModel extends DefaultTableModel {
 	private static JPanel appointment = new JPanel();
 	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
+	private ArrayList<String> otherPersons = new ArrayList<String>();
 
 	public static DefaultListModel getListModel() {
 		return listModel;
@@ -42,6 +44,10 @@ public class CalendarModel extends DefaultTableModel {
 
 	public static JPanel getAppointment() {
 		return appointment;
+	}
+
+	public static String getUsername() {
+		return username;
 	}
 
 
@@ -95,23 +101,35 @@ public class CalendarModel extends DefaultTableModel {
 			_sunday.setDate(_sunday.getDate() - 7);
 		}
 		ResultSet rs = db.getCreatedAppointments(username, _monday, _sunday);
-		insertIntoCalendar(rs,false);
+		insertIntoCalendar(rs,username, Color.green);
 		ResultSet rs2 = db.getInvitedAppointments(username, _monday, _sunday);
-		insertIntoCalendar(rs2,false);
-	}
-
-	public void insertIntoCalendar(ResultSet rs, boolean otherPerson) throws SQLException{
-		while (rs.next()) {
-			int day = rs.getTimestamp("Starttid").getDay();
-			int hour = rs.getTimestamp("Starttid").getHours();
-			insertEvent(rs.getInt("AvtaleID"), hour, day);;
+		insertIntoCalendar(rs2,username, Color.green);
+		Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
+		if (otherPersons.size() > 0) {
+		for (int i = 0; i < otherPersons.size(); i++) {
+			if(otherPersons.get(i).equals(this.getUsername())){continue;}
+			try {
+				addOtherPersonsAppointments(otherPersons.get(i), personColors[i]);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		}
 	}
 
-	public void insertEvent(Object value, int time, int day) throws SQLException{
+	public void insertIntoCalendar(ResultSet rs, String username, Color color) throws SQLException{
+		while (rs.next()) {
+			int day = rs.getTimestamp("Starttid").getDay();
+			int hour = rs.getTimestamp("Starttid").getHours();
+			insertEvent(rs.getInt("AvtaleID"), hour, day, username, color);
+		}
+	}
+
+	public void insertEvent(Object value, int time, int day, String username, Color color) throws SQLException{
 		time = time - 7;
 		if (value instanceof Integer) {
-			((JPanel) this.getValueAt(time, day)).add(new EventBox("",(Integer) value, username));
+			((JPanel) this.getValueAt(time, day)).add(new EventBox("",(Integer) value, username, color));
 		}
 		else{
 			this.setValueAt(new JPanel(), time, day);
@@ -134,15 +152,17 @@ public class CalendarModel extends DefaultTableModel {
 	}
 
 	/*
-	 * TODO: Finne ut om bruker selv deltar pŒ avtalen
-	 * TODO: Sette farge
-	 * TODO: Beholde avtalen i kalenderen nŒr man blar mellom uker
+	 *
 	 */
-	public void addOtherPersonsAppointments(String u) throws SQLException {
-		ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
-		insertIntoCalendar(rs,true);
-		ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
-		insertIntoCalendar(rs2,true);
+	public void addOtherPersonsAppointments(String u, Color color) throws SQLException {
+
+			//Sett inn andres avtaler
+			ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
+			insertIntoCalendar(rs,u, color);
+			ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
+			insertIntoCalendar(rs2,u, color);
+
+		//Oppdater kalenderen
 		this.fireTableDataChanged();
 
 	}
@@ -185,6 +205,10 @@ public class CalendarModel extends DefaultTableModel {
 	@Override
 	public boolean isCellEditable(int row, int coloumn){
 		return true;
+	}
+
+	public void setOtherPersons(ArrayList<String> selectedPersons) {
+		this.otherPersons = selectedPersons;
 	}
 
 

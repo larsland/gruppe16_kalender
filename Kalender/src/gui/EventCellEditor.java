@@ -40,7 +40,7 @@ public class EventCellEditor extends AbstractCellEditor implements TableCellEdit
 
 	@Override
 	public boolean shouldSelectCell(EventObject arg0) {
-		return false;
+		return true;
 	}
 
 	@Override

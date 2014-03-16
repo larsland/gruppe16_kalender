@@ -47,6 +47,7 @@ public class Notification {
 				 if (notTime.get(notTime.size() -1).before(now) ) {
 					 notMessages.add(rs.getString("Meldingstekst"));
 				 }
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

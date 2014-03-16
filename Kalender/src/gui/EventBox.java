@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
 import calendar.CalendarModel;
@@ -27,12 +29,11 @@ public class EventBox extends JButton implements ActionListener {
 	private int appId;
 	private Database db = new Database();
 	private String username = null;
-	private ImageIcon acceptedIcon = new ImageIcon("img/success-icon.png");
-	private ImageIcon pendingIcon = new ImageIcon("img/alert-icon.png");
-	private ImageIcon rejectedIcon = new ImageIcon("img/close-icon.png");
-	private Color color = Color.GREEN;
+	private ImageIcon acceptedIcon = new ImageIcon("src/img/success-icon.png");
+	private ImageIcon pendingIcon = new ImageIcon("src/img/alert-icon.png");
+	private ImageIcon rejectedIcon = new ImageIcon("src/img/close-icon.png");
 	
-	public EventBox(String s, int appId, String username) throws SQLException {
+	public EventBox(String s, int appId, String username, Color color) throws SQLException {
 		super(s);
 		this.appId = appId;
 		this.username = username;
