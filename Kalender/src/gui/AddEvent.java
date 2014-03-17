@@ -347,9 +347,13 @@ public class AddEvent extends JFrame {
             ArrayList<String> participants = new ArrayList<String>();
             java.sql.Date dateSql = new java.sql.Date(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate());
 
+            if (addExternContacts != null) {
+				
             otherContactsList = addExternContacts.getMailList();
             if (otherContactsList.size() > 0) {
             	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end);
+			}
+
 			}
 
             for (User u : memberList.getSelectedPersons()) {

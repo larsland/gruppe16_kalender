@@ -23,7 +23,7 @@ public class AddExternContacts extends JFrame {
  
     private JPanel contentPane;
     private JTextArea txtContacts;
-    private ArrayList<String> mailList = new ArrayList<String>();
+    private ArrayList<String> mailList;
  
     public AddExternContacts() {
         this.setVisible(true);
