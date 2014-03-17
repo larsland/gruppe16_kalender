@@ -78,7 +78,7 @@ public class MainPanel extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	private CalendarModel model;
+	private static CalendarModel model;
 	private String username;
 	private static JPanel appointment;
 	private static JPanel participants;
@@ -98,6 +98,9 @@ public class MainPanel extends JFrame {
 	private DefaultListModel otherPersonsListModel = new DefaultListModel();
 	private Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
 	private JLabel lblDato;
+	private JList list;
+	private static JPanel statusBtnPanel;
+	private static JPanel creatorBtnPanel;
 
 
 	/**
@@ -313,9 +316,11 @@ public class MainPanel extends JFrame {
 		tabbedPane.add(appointment);
 
 
-		JList list = new JList(model.getListModel());
-		list.setBounds(83, 89, 1, 1);
+		list = new JList(model.getListModel());
+		list.setBackground(null);
+		list.setCellRenderer(new EventRender());
 		appointment.add(list);
+		list.setBounds(83, 89, 1, 1);
 		tabbedPane.add(participants);
 
 		JList list2 = new JList(model.getParticipantsModel());
@@ -323,6 +328,11 @@ public class MainPanel extends JFrame {
 		participants.add(list2);
 		list.setBounds(83, 89, 1, 1);
 		contentPane.add(tabbedPane);
+		
+		statusBtnPanel = new JPanel();
+		creatorBtnPanel = new JPanel();
+		appointment.add(statusBtnPanel);
+		appointment.add(creatorBtnPanel);
 
 		JButton btnNyAvtale = new JButton("Ny Avtale");
 		btnNyAvtale.setBounds(829, 485, 117, 29);
@@ -402,8 +412,83 @@ public class MainPanel extends JFrame {
 		lblDato.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblDato.setBounds(325, 50, 196, 16);
 		contentPane.add(lblDato);
+	}
+	
+	public static void setStatusChangeButtons(final int appId, String status) {
+		JButton btnAccept = new JButton("Godta");
+		JButton btnDecline = new JButton("Avslå");
+		JButton btnDeleteInvited = new JButton("Slett");
+		creatorBtnPanel.add(btnDeleteInvited);
+		statusBtnPanel.add(btnAccept);
+		statusBtnPanel.add(btnDecline);
 		
+		btnAccept.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.setStatus(appId, 1);
+				try {
+					model.setThisWeeksAppointments(0);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				model.fillSidePanel(appId);
+			}
+		});
+		btnDecline.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.setStatus(appId, -1);
+				try {
+					model.setThisWeeksAppointments(0);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				model.fillSidePanel(appId);
+			}
+		});
+		btnDeleteInvited.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.deleteAttendence(appId);
+				try {
+					model.setThisWeeksAppointments(0);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				clearButtons();
+				model.fillSidePanel(0);
+			}
+		});
+	}
+	
+	public static void setCreatorButtons(final int appID) {
+		JButton btnChangeEvent = new JButton("Endre");
+		creatorBtnPanel.add(btnChangeEvent);
+		JButton btnDeleteCreator = new JButton("Slett");
+		creatorBtnPanel.add(btnDeleteCreator);
 		
-
+		btnChangeEvent.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//open change event panel with info
+			}
+		});
+		btnDeleteCreator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.deleteAppointment(appID);
+				try {
+					model.setThisWeeksAppointments(0);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				model.fillSidePanel(0);
+			}
+		});
+	}
+	
+	public static void clearButtons() {
+		statusBtnPanel.removeAll();
+		creatorBtnPanel.removeAll();
 	}
 }

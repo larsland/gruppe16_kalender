@@ -178,14 +178,24 @@ public class CalendarModel extends DefaultTableModel {
 		try {
 			rs = db.getAppointmentInfo(appId);
 			rs2 = db.getParticipantsInAppointment(appId);
-			while (rs.next()) {
-				CalendarModel.getListModel().addElement("Start: " + rs.getString("Starttid"));
-				CalendarModel.getListModel().addElement("Slutt: " + rs.getString("Sluttid"));
-				CalendarModel.getListModel().addElement("Beskrivelse: " + rs.getString("Beskrivelse"));
-
+			if (rs.next()) {
+				MainPanel.clearButtons();
+				CalendarModel.getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
+				CalendarModel.getListModel().addElement("Avtalen slutter kl: " + rs.getString("Sluttid").substring(11, 16));
+				CalendarModel.getListModel().addElement("Sted: " + rs.getString("Sted"));
+				CalendarModel.getListModel().addElement(" ");
+				CalendarModel.getListModel().addElement("Beskrivelse:");
+				CalendarModel.getListModel().addElement(rs.getString("Beskrivelse"));
 				if (rs.getString("Opprettet_av").equals(username)) {
+					CalendarModel.getListModel().addElement("1");
+					MainPanel.setCreatorButtons(appId);
+					CalendarModel.getListModel().addElement("1");
+					
+					//set endre button and if slett.click, delete avtale
 				}
-
+				else {
+					CalendarModel.getListModel().addElement("0");
+				}
 
 				ArrayList<Object> label = new ArrayList<Object>();
 				label.add(rs.getString("Opprettet_av"));
@@ -194,14 +204,47 @@ public class CalendarModel extends DefaultTableModel {
 			}
 			while (rs2.next()) {
 				ArrayList<Object> label = new ArrayList<Object>();
-				label.add(rs2.getString("brukernavn"));
-				label.add(rs2.getInt("Godkjenning"));
-
+				String tempUsername = rs2.getString("brukernavn");
+				int tempStatus = rs2.getInt("Godkjenning");		
+				label.add(tempUsername);
+				label.add(tempStatus);
+				if (tempUsername.equals(username)) {
+					CalendarModel.getListModel().addElement(tempStatus + "");
+					MainPanel.setStatusChangeButtons(appId, tempStatus + "");
+				}
 				CalendarModel.getParticipantsModel().addElement(label);
 
 			}
+			if (CalendarModel.getListModel().size() < 8) {
+				CalendarModel.getListModel().addElement(" ");
+			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
+
+
+	public void setStatus(int appID, int status) {
+		try {
+			db.setStatusForAppointment(username, appID, status);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteAttendence(int appId) {
+		try {
+			db.removeAttendence(username, appId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteAppointment(int appId) {
+		try {
+			db.deleteAppointment(appId);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

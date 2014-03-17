@@ -14,8 +14,8 @@ import org.joda.time.LocalDate;
 
 public class Database {
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 *
 	 */
 private String url = "jdbc:mysql://mysql.stud.ntnu.no/andekol_g16_db";
@@ -44,29 +44,29 @@ private String pwd = "gruppe16";
 		}
 	}
 
-	
+
 	public boolean userExists(String username) throws SQLException{
 		stmt = con.createStatement();
 		rs = stmt.executeQuery("SELECT Brukernavn FROM Person " +
 			"WHERE Brukernavn = '"+username +"' LIMIT 1;");
-	
+
 		if (rs.next()) {
 			return true;
 		}
-		return false; 
-	}	
+		return false;
+	}
 
-	
+
 	/*
 	 * Verify login
-	 */	
+	 */
 	public boolean checkPass(String username, String password) throws SQLException {
 		if (userExists(username)) {
 			return BCrypt.checkpw(password, getPassword(username));
 		}
 		return false;
 	}
-	
+
 	public String getPassword(String username) throws SQLException{
 		stmt = con.createStatement();
 		rs = stmt.executeQuery("SELECT passtoken FROM Person WHERE Brukernavn='"+username+"';");
@@ -75,8 +75,19 @@ private String pwd = "gruppe16";
 		}
 		return null;
 	}
-	
-	
+
+	public void setStatusForAppointment(String username, int appID, int status) throws SQLException{
+		stmt = con.createStatement();
+		String query = "UPDATE Deltar_på SET Godkjenning = " + status + " WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
+		stmt.executeUpdate(query);
+	}
+
+	public void removeAttendence(String username, int appID) throws SQLException {
+		stmt = con.createStatement();
+		String query = "DELETE FROM Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
+		stmt.executeUpdate(query);
+	}
+
 	/*
 	 * Create appointment
 	 * TODO: MÂteleder, mÂterom/sted
@@ -94,10 +105,10 @@ private String pwd = "gruppe16";
 		st.executeUpdate();
 
 		// Lagre siste id
-	    ResultSet keys = st.getGeneratedKeys();    
-	    keys.next();  
+	    ResultSet keys = st.getGeneratedKeys();
+	    keys.next();
 	    int key = keys.getInt(1);
-	    
+
 	    //Legg til deltakere
 	    String query2 = "INSERT INTO Deltar_på VALUES (?,?,?);";
 	    st = con.prepareStatement(query2);
@@ -107,12 +118,12 @@ private String pwd = "gruppe16";
 	      st.setInt(3, 0);
 	      st.executeUpdate();
 	    }
-	    
+
 	    //Legg til møterom
 	   stmt = con.createStatement();
 	   String query3 = "INSERT INTO Avtalested VALUES ("+key+", "+romId+");";
 	   stmt.execute(query3);
-	    
+
 	    //Send varsel
 	   String query4 = "INSERT INTO Varsel VALUES (?,?,?,CURRENT_TIMESTAMP);";
 	   st = con.prepareStatement(query4);
@@ -123,9 +134,21 @@ private String pwd = "gruppe16";
 		   st.executeUpdate();
 	   }
 
-	    
+
 	}
-	
+
+	public ResultSet getAppointmentInfo(int appointmentId) throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT Avtale.AvtaleID, Dato, Starttid, Sluttid, Beskrivelse," +
+			"Opprettet_av, Møterom.Sted FROM Avtale inner join Avtalested on " +
+			"Avtale.AvtaleID = Avtalested.AvtaleID inner join Møterom on " +
+			"Avtalested.RomID = Møterom.RomID WHERE Avtale.AvtaleID = " + appointmentId +
+			";";
+		rs = stmt.executeQuery(query);
+		return rs;
+
+	}
+
 	/*
 	 * Endre avtale
 	 * TODO rom, varsel
@@ -140,7 +163,7 @@ private String pwd = "gruppe16";
 		st.setString(5, creator);
 		st.setInt(6, id);
 		st.executeUpdate();
-		
+
 		//Slett gamle
 		for (String person : deletedPersons) {
 			deleteInvitation(id, person);
@@ -155,9 +178,9 @@ private String pwd = "gruppe16";
 		      st.setInt(3, 0);
 		      st.executeUpdate();
 		   }
-		
+
 	}
-	
+
 	/*
 	 * Slett avtale
 	 */
@@ -165,15 +188,15 @@ private String pwd = "gruppe16";
 		stmt = con.createStatement();
 		String query = "DELETE FROM Avtale WHERE AvtaleID = "+id+";";
 		stmt.execute(query);
-		
+
 	}
-	
+
 	public void answerInvitation(int id, String username, int accept) throws SQLException{
 		stmt = con.createStatement();
 		String query = "UPDATE Deltar_på SET Godkjenning = "+accept+" WHERE AvtaleID = "+id+" and Brukernavn = '"+username+"';";
 		stmt.execute(query);
 	}
-	
+
 	/*
 	 * Skjul invitert avtale
 	 */
@@ -182,9 +205,9 @@ private String pwd = "gruppe16";
 		String query = "DELETE FROM Deltar_på WHERE AvtaleID = "+id+" AND Brukernavn = '"+username+"';";
 		stmt.execute(query);
 	}
-	
+
 	/*
-	 * 
+	 *
 	 */
 	public ResultSet getParticipantsInAppointment(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
@@ -192,8 +215,8 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
-	
+
+
 	public ArrayList<User> getUserParticipants(int id) throws SQLException{
 		ArrayList<User> p = new ArrayList<User>();
 		stmt = con.createStatement();
@@ -205,19 +228,8 @@ private String pwd = "gruppe16";
 		}
 		return p;
 	}
-	
-	
-	/*
-	 * 
-	 */
-	public ResultSet getAppointmentInfo(int appointmentId) throws SQLException{
-		stmt = con.createStatement();
-		String query = "SELECT * FROM Avtale WHERE AvtaleID= '"+ appointmentId+"';";
-		rs = stmt.executeQuery(query);
-		return rs;
-		
-	}
-	
+
+
 	/*
 	 * Avtaler som bruker er invitert til
 	 */
@@ -227,8 +239,8 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
-	
+
+
 	public ArrayList<EventModel> getEventModelAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
 		stmt = con.createStatement();
 		String query = "SELECT * FROM Avtale WHERE Opprettet_av = '"+username+"' AND (Starttid BETWEEN '"+monday+"' AND '"+sunday+"');"; //' AND Starttid >= "+monday+" AND Sluttid <= "+sunday+"
@@ -242,7 +254,7 @@ private String pwd = "gruppe16";
 		}
 		return events;
 	}
-	
+
 	public EventModel getEventModelForAppointment(int id) throws SQLException{
 		stmt = con.createStatement();
 		String query = "SELECT * FROM Avtale WHERE AvtaleID = "+id+";";
@@ -271,7 +283,7 @@ private String pwd = "gruppe16";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
+
 	public User getCreator(int id) throws SQLException{
 		stmt = con.createStatement();
 		String query="select Opprettet_av, navn FROM Avtale inner join Person on Avtale.Opprettet_av = Person.brukernavn WHERE AvtaleID = "+id+";";
@@ -282,14 +294,14 @@ private String pwd = "gruppe16";
 		return null;
 
 	}
-	
+
 	public ResultSet getStatusForAppointment(String username, int appID) throws SQLException{
 		stmt = con.createStatement();
 		String query = "select brukernavn, Godkjenning from Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
-	
+
 	public Room getBookedRoom(int id) throws SQLException{
 		stmt = con.createStatement();
 		String query = "select Møterom.RomID, sted FROM Møterom inner join Avtalested on Møterom.RomID = Avtalested.RomID where AvtaleID = "+id+";";
@@ -299,7 +311,7 @@ private String pwd = "gruppe16";
 		}
 		return null;
 	}
-	
+
 	/*
 	 * Hent alle brukere i systemet
 	 */
@@ -312,9 +324,9 @@ private String pwd = "gruppe16";
 			persons.add(new User(rs.getString("Navn"), rs.getString("Brukernavn")));
 		}
 		return persons;
-		
+
 	}
-	
+
 	public ArrayList<Room> getAvailableRooms(Timestamp startTime, Timestamp endTime, int capacity) throws SQLException {
 		stmt = con.createStatement();
 		ArrayList<Room> AvailableRooms = new ArrayList<Room>();
@@ -338,29 +350,27 @@ private String pwd = "gruppe16";
 		return AvailableRooms;
 	}
 
-	
+
 	public ResultSet getNotifications(String username) throws SQLException {
 		stmt = con.createStatement();
 		String query = "SELECT AvtaleID, Meldingstekst, tid FROM Varsel WHERE" +
 				" Brukernavn = '" + username + "';";
 		return stmt.executeQuery(query);
 	}
-	
+
 	public void setNotification (int avtaleID, String brukernavn, String meld) throws SQLException {
 		stmt = con.createStatement();
 		String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst) VALUES('" +
 		avtaleID + "', '" + brukernavn + "', '" + meld + "');";
 		stmt.execute(query);
 	}
-	
+
 	public void removeNotification(int avtaleID, String username) throws SQLException {
 		stmt = con.createStatement();
-		String query = "DELETE FROM Varsel WHERE AvtaleID = '" + avtaleID + 
+		String query = "DELETE FROM Varsel WHERE AvtaleID = '" + avtaleID +
 				"' AND Brukernavn = '" + username + "';";
 		stmt.executeUpdate(query);
 	}
-	
 
-	
-	
+
 }
