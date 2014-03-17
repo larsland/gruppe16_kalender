@@ -56,9 +56,27 @@ public class Notification {
 	}
 	
 	public void removeNoti(int index) {
-//		db.removeNotification(notAvtaleID.get(index), username);
-		notAvtaleID.remove(index);
-		notMessages.remove(index);
-		notTime.remove(index);
+		try {
+			db.removeNotification(notAvtaleID.get(index), username, notMessages.get(index));
+			notAvtaleID.remove(index);
+			notMessages.remove(index);
+			notTime.remove(index);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendNotification(int appId, String username, String message) {
+		try {
+			ResultSet rs = db.getAppointmentInfo(appId);
+			if (rs.next()) {
+				String starttid = rs.getString("Starttid").substring(11, 16);
+				db.sendNotificationToAll(appId, username, message + "kl: " + starttid);
+				db.sendNotificationToOne(appId, rs.getString("Opprettet_av"), message + "kl: " + starttid);
+			}
+		} 
+		catch (SQLException e) {
+		}
 	}
 }

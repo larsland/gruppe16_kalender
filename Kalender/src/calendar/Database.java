@@ -364,17 +364,31 @@ private String pwd = "gruppe16";
 		return stmt.executeQuery(query);
 	}
 
-	public void setNotification (int avtaleID, String brukernavn, String meld) throws SQLException {
+	public void sendNotificationToAll (int avtaleID, String brukernavn, String meld) throws SQLException {
+		stmt = con.createStatement();
+		String getInvitedQuery = "SELECT Brukernavn FROM Deltar_på WHERE AvtaleID = '" + avtaleID + "';";
+		rs = stmt.executeQuery(getInvitedQuery);
+		while (rs.next()) {
+			String tempUsername = rs.getString("Brukernavn");
+			if (!tempUsername.equals(brukernavn)) {
+				String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst) VALUES('" +
+						avtaleID + "', '" + tempUsername + "', '" + meld + "');";
+				stmt.execute(query);
+			}
+		}
+	}
+	
+	public void sendNotificationToOne(int avtaleID, String username, String meld) throws SQLException {
 		stmt = con.createStatement();
 		String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst) VALUES('" +
-		avtaleID + "', '" + brukernavn + "', '" + meld + "');";
+				avtaleID + "', '" + username + "', '" + meld + "');";
 		stmt.execute(query);
 	}
 
-	public void removeNotification(int avtaleID, String username) throws SQLException {
+	public void removeNotification(int avtaleID, String username, String meld) throws SQLException {
 		stmt = con.createStatement();
 		String query = "DELETE FROM Varsel WHERE AvtaleID = '" + avtaleID +
-				"' AND Brukernavn = '" + username + "';";
+				"' AND Brukernavn = '" + username + "' AND Meldingstekst = '" + meld + "';";
 		stmt.executeUpdate(query);
 	}
 

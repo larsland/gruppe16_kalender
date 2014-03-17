@@ -95,7 +95,7 @@ public class MainPanel extends JFrame {
 	private CheckCombo personsComboBox = new CheckCombo();
 	private JPopupMenu notPanel;
 	private JList notList;
-	private Notification notification;
+	private static Notification notification;
 	private JButton btnNoti;
 	private DefaultListModel otherPersonsListModel = new DefaultListModel();
 	private Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
@@ -444,6 +444,8 @@ public class MainPanel extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				model.setStatus(appId, -1);
+				notification.sendNotification(appId, username, username + " har avkreftet avtalen ");
+				
 				try {
 					model.setThisWeeksAppointments(0);
 				} catch (SQLException e) {
@@ -456,6 +458,7 @@ public class MainPanel extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				model.deleteAttendence(appId);
+				notification.sendNotification(appId, username, username + " har slettet avtalen ");
 				try {
 					model.setThisWeeksAppointments(0);
 				} catch (SQLException e) {
