@@ -43,7 +43,7 @@ public class EventRender implements ListCellRenderer {
 				l.setIcon(acceptedIcon);
 			}
 			else if (((String) value).equals("-1")){
-				l.setText("Du har avslŒtt");
+				l.setText("Du har avslått");
 				l.setIcon(rejectedIcon);
 			}
 			else {
