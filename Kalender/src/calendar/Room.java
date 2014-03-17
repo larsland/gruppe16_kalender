@@ -11,6 +11,7 @@ public class Room {
 		this.location = location;
 		this.capacity = capacity;
 	}
+	
 
 	public int getRoomID() {
 		return roomID;

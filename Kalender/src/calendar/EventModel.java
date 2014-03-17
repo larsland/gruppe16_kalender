@@ -21,10 +21,25 @@ public class EventModel extends DefaultListModel{
 	private Timestamp start;
 	private Timestamp end;
 	private ArrayList<User> participants;
-	private User creator = new User();
+	private User creator;
+	private int id;
+	private Date sqlDate;
+	private String otherPlace;
 	
 	public EventModel(){
 		
+	}
+	
+	public EventModel(int id, String desc, Date date, Timestamp start, Timestamp end, ArrayList<User> participants, User creator, Room room, String otherPlace){
+		setId(id);
+		setDesc(desc);
+		setSqlDate(date);
+		setStart(start);
+		setEnd(end);
+		setParticipants(participants);
+		setCreator(creator);
+		setRoom(room);
+		setOtherPlace(otherPlace);
 	}
 	
 	public EventModel(String location, String desc, String date, Timestamp start, Timestamp end, ArrayList<User> participants) {		
@@ -43,6 +58,28 @@ public class EventModel extends DefaultListModel{
 		setStart(start);
 		setEnd(end);
 		setParticipants(participants);
+	}
+	
+	public void setOtherPlace(String otherPlace) {
+		this.otherPlace = otherPlace;
+	}
+	
+	public void setSqlDate(Date sqlDate) {
+		this.sqlDate = sqlDate;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public Date getSqlDate() {
+		return sqlDate;
+	}
+	public int getId() {
+		return id;
+	}
+	public String getOtherPlace() {
+		return otherPlace;
 	}
 	
 	public String getDesc() {

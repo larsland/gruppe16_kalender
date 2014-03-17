@@ -193,6 +193,20 @@ private String pwd = "gruppe16";
 		return rs;
 	}
 	
+	
+	public ArrayList<User> getUserParticipants(int id) throws SQLException{
+		ArrayList<User> p = new ArrayList<User>();
+		stmt = con.createStatement();
+		String query = "select Deltar_på.brukernavn,Navn, Godkjenning from Deltar_på inner join Avtale on Deltar_på.`AvtaleID` = Avtale.AvtaleID "
+				+ " inner join Person on Deltar_på.brukernavn = Person.brukernavn WHERE Deltar_på.AvtaleID = "+id+";";
+		rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			p.add(new User(rs.getString("brukernavn"), rs.getString("Navn"), rs.getInt("Godkjenning")));
+		}
+		return p;
+	}
+	
+	
 	/*
 	 * 
 	 */
@@ -214,6 +228,40 @@ private String pwd = "gruppe16";
 		return rs;
 	}
 	
+	
+	public ArrayList<EventModel> getEventModelAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT * FROM Avtale WHERE Opprettet_av = '"+username+"' AND (Starttid BETWEEN '"+monday+"' AND '"+sunday+"');"; //' AND Starttid >= "+monday+" AND Sluttid <= "+sunday+"
+		rs = stmt.executeQuery(query);
+		ArrayList<EventModel> events = new ArrayList<EventModel>();
+		if (rs.next()) {
+			ArrayList<User> participants = getUserParticipants(rs.getInt("AvtaleID"));
+			Room room = getBookedRoom(rs.getInt("AvtaleID"));
+			User creator = getCreator(rs.getInt("AvtaleID"));
+			events.add(new EventModel(rs.getInt("AvtaleID"), rs.getString("Beskrivelse"), rs.getDate("Dato"), rs.getTimestamp("Starttid"), rs.getTimestamp("Sluttid"), participants, creator, room, ""));
+		}
+		return events;
+	}
+	
+	public EventModel getEventModelForAppointment(int id) throws SQLException{
+		stmt = con.createStatement();
+		String query = "SELECT * FROM Avtale WHERE AvtaleID = "+id+";";
+		rs = stmt.executeQuery(query);
+		if (rs.next()) {
+			int id2 = rs.getInt("AvtaleID");
+			String desc = rs.getString("Beskrivelse");
+			Date date = rs.getDate("Dato");
+			Timestamp start = rs.getTimestamp("Starttid");
+			Timestamp end = rs.getTimestamp("Sluttid");
+			ArrayList<User> participants = getUserParticipants(id);
+			Room room = getBookedRoom(id);
+			User creator = getCreator(id);
+			return new EventModel(id, desc, date, start, end, participants, creator, room, "");
+		}
+		return null;
+	}
+
+
 	/*
 	 * Avtaler som bruker har opprettet selv
 	 */
@@ -224,6 +272,17 @@ private String pwd = "gruppe16";
 		return rs;
 	}
 	
+	public User getCreator(int id) throws SQLException{
+		stmt = con.createStatement();
+		String query="select Opprettet_av, navn FROM Avtale inner join Person on Avtale.Opprettet_av = Person.brukernavn WHERE AvtaleID = "+id+";";
+		rs = stmt.executeQuery(query);
+		if (rs.next()) {
+			return new User(rs.getString("navn"), rs.getString("Opprettet_av"));
+		}
+		return null;
+
+	}
+	
 	public ResultSet getStatusForAppointment(String username, int appID) throws SQLException{
 		stmt = con.createStatement();
 		String query = "select brukernavn, Godkjenning from Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
@@ -231,6 +290,15 @@ private String pwd = "gruppe16";
 		return rs;
 	}
 	
+	public Room getBookedRoom(int id) throws SQLException{
+		stmt = con.createStatement();
+		String query = "select Møterom.RomID, sted FROM Møterom inner join Avtalested on Møterom.RomID = Avtalested.RomID where AvtaleID = "+id+";";
+		rs = stmt.executeQuery(query);
+		if (rs.next()) {
+			return new Room(rs.getInt("RomID"), rs.getString("sted"),0);
+		}
+		return null;
+	}
 	
 	/*
 	 * Hent alle brukere i systemet
