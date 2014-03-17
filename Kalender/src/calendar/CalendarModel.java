@@ -179,10 +179,14 @@ public class CalendarModel extends DefaultTableModel {
 			rs = db.getAppointmentInfo(appId);
 			rs2 = db.getParticipantsInAppointment(appId);
 			if (rs.next()) {
+				String sted = rs.getString("avtale_sted");
+				if (sted == null) {
+					rs.getString("Sted");
+				}
 				MainPanel.clearButtons();
 				CalendarModel.getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
 				CalendarModel.getListModel().addElement("Avtalen slutter kl: " + rs.getString("Sluttid").substring(11, 16));
-				CalendarModel.getListModel().addElement("Sted: " + rs.getString("Sted"));
+				CalendarModel.getListModel().addElement("Sted: " + sted);
 				CalendarModel.getListModel().addElement(" ");
 				CalendarModel.getListModel().addElement("Beskrivelse:");
 				CalendarModel.getListModel().addElement(rs.getString("Beskrivelse"));
