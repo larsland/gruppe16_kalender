@@ -86,19 +86,6 @@ public class AddEvent extends JFrame {
 	}
 
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new AddEvent("andekol");
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	public AddEvent(String username) throws SQLException {
 		this.username = username;
 		numMembers = db.getAllUsers().size();
@@ -345,7 +332,7 @@ public class AddEvent extends JFrame {
 			if (!txtLocation.isVisible()) {
 				event = new EventModel(cbRoom.getSelectedItem().toString(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
 				try {
-					db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, ((Room) cbRoom.getSelectedItem()).getRoomID());
+					db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, ((Room) cbRoom.getSelectedItem()).getRoomID(), null);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -353,6 +340,12 @@ public class AddEvent extends JFrame {
 			}
 			else if (txtLocation.isVisible()) {
 				event = new EventModel(txtLocation.getText(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
+				try {
+					db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, 0, txtLocation.getText());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 				
 		}

@@ -78,13 +78,13 @@ private String pwd = "gruppe16";
 
 	public void setStatusForAppointment(String username, int appID, int status) throws SQLException{
 		stmt = con.createStatement();
-		String query = "UPDATE Deltar_på SET Godkjenning = " + status + " WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
+		String query = "UPDATE Deltar_pŒ SET Godkjenning = " + status + " WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		stmt.executeUpdate(query);
 	}
 
 	public void removeAttendence(String username, int appID) throws SQLException {
 		stmt = con.createStatement();
-		String query = "DELETE FROM Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
+		String query = "DELETE FROM Deltar_pŒ WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		stmt.executeUpdate(query);
 	}
 
@@ -92,7 +92,7 @@ private String pwd = "gruppe16";
 	 * Create appointment
 	 * TODO: Måteleder, måterom/sted
 	 */
-	public void createAppointment(Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, int romId) throws SQLException{
+	public void createAppointment(Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, int romId, String sted) throws SQLException{
 		stmt = con.createStatement();
 		String query = "INSERT INTO Avtale (Dato, Starttid, Sluttid, Beskrivelse, Opprettet_av) VALUES "
 				+ "(?,?,?,?,?)";
@@ -110,7 +110,7 @@ private String pwd = "gruppe16";
 	    int key = keys.getInt(1);
 
 	    //Legg til deltakere
-	    String query2 = "INSERT INTO Deltar_på VALUES (?,?,?);";
+	    String query2 = "INSERT INTO Deltar_pŒ VALUES (?,?,?);";
 	    st = con.prepareStatement(query2);
 	    for (String user : participants) {
 	      st.setInt(1, key);
@@ -119,10 +119,15 @@ private String pwd = "gruppe16";
 	      st.executeUpdate();
 	    }
 
-	    //Legg til møterom
-	   stmt = con.createStatement();
-	   String query3 = "INSERT INTO Avtalested VALUES ("+key+", "+romId+");";
-	   stmt.execute(query3);
+	    //Legg til M¿terom
+	    if (sted == null) {
+	    	stmt = con.createStatement();
+	    	String query3 = "INSERT INTO Avtalested VALUES ("+key+", "+romId+");";
+	    	stmt.execute(query3);
+		}
+	    else{
+	    	
+	    }
 
 	    //Send varsel
 	   String query4 = "INSERT INTO Varsel VALUES (?,?,?,CURRENT_TIMESTAMP);";
@@ -140,9 +145,9 @@ private String pwd = "gruppe16";
 	public ResultSet getAppointmentInfo(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
 		String query = "SELECT Avtale.AvtaleID, Dato, Starttid, Sluttid, Beskrivelse," +
-			"Opprettet_av, Avtale.Sted AS avtale_sted, Møterom.Sted FROM Avtale inner join Avtalested on " +
-			"Avtale.AvtaleID = Avtalested.AvtaleID inner join Møterom on " +
-			"Avtalested.RomID = Møterom.RomID WHERE Avtale.AvtaleID = " + appointmentId +
+			"Opprettet_av, Avtale.Sted AS avtale_sted, M¿terom.Sted FROM Avtale inner join Avtalested on " +
+			"Avtale.AvtaleID = Avtalested.AvtaleID inner join M¿terom on " +
+			"Avtalested.RomID = M¿terom.RomID WHERE Avtale.AvtaleID = " + appointmentId +
 			";";
 		rs = stmt.executeQuery(query);
 		return rs;
@@ -170,7 +175,7 @@ private String pwd = "gruppe16";
 		}
 
 		//Inviter nye
-		 String query2 = "INSERT INTO Deltar_på VALUES (?,?,?);";
+		 String query2 = "INSERT INTO Deltar_pŒ VALUES (?,?,?);";
 		    st = con.prepareStatement(query2);
 		    for (String user : participants) {
 		      st.setInt(1, id);
@@ -193,7 +198,7 @@ private String pwd = "gruppe16";
 
 	public void answerInvitation(int id, String username, int accept) throws SQLException{
 		stmt = con.createStatement();
-		String query = "UPDATE Deltar_på SET Godkjenning = "+accept+" WHERE AvtaleID = "+id+" and Brukernavn = '"+username+"';";
+		String query = "UPDATE Deltar_pŒ SET Godkjenning = "+accept+" WHERE AvtaleID = "+id+" and Brukernavn = '"+username+"';";
 		stmt.execute(query);
 	}
 
@@ -202,7 +207,7 @@ private String pwd = "gruppe16";
 	 */
 	public void deleteInvitation(int id, String username) throws SQLException{
 		stmt = con.createStatement();
-		String query = "DELETE FROM Deltar_på WHERE AvtaleID = "+id+" AND Brukernavn = '"+username+"';";
+		String query = "DELETE FROM Deltar_pŒ WHERE AvtaleID = "+id+" AND Brukernavn = '"+username+"';";
 		stmt.execute(query);
 	}
 
@@ -211,7 +216,7 @@ private String pwd = "gruppe16";
 	 */
 	public ResultSet getParticipantsInAppointment(int appointmentId) throws SQLException{
 		stmt = con.createStatement();
-		String query = "select brukernavn, Godkjenning from Deltar_på inner join Avtale on Deltar_på.`AvtaleID` = Avtale.AvtaleID WHERE Deltar_på.AvtaleID = "+appointmentId+";";
+		String query = "select brukernavn, Godkjenning from Deltar_pŒ inner join Avtale on Deltar_pŒ.`AvtaleID` = Avtale.AvtaleID WHERE Deltar_pŒ.AvtaleID = "+appointmentId+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
@@ -220,8 +225,8 @@ private String pwd = "gruppe16";
 	public ArrayList<User> getUserParticipants(int id) throws SQLException{
 		ArrayList<User> p = new ArrayList<User>();
 		stmt = con.createStatement();
-		String query = "select Deltar_på.brukernavn,Navn, Godkjenning from Deltar_på inner join Avtale on Deltar_på.`AvtaleID` = Avtale.AvtaleID "
-				+ " inner join Person on Deltar_på.brukernavn = Person.brukernavn WHERE Deltar_på.AvtaleID = "+id+";";
+		String query = "select Deltar_pŒ.brukernavn,Navn, Godkjenning from Deltar_pŒ inner join Avtale on Deltar_pŒ.`AvtaleID` = Avtale.AvtaleID "
+				+ " inner join Person on Deltar_pŒ.brukernavn = Person.brukernavn WHERE Deltar_pŒ.AvtaleID = "+id+";";
 		rs = stmt.executeQuery(query);
 		while (rs.next()) {
 			p.add(new User(rs.getString("brukernavn"), rs.getString("Navn"), rs.getInt("Godkjenning")));
@@ -235,7 +240,7 @@ private String pwd = "gruppe16";
 	 */
 	public ResultSet getInvitedAppointments(String username, Timestamp monday, Timestamp sunday) throws SQLException{
 		stmt = con.createStatement();
-		String query = "select * from Avtale inner join `Deltar_på` on `Deltar_på`.`AvtaleID` = `Avtale`.`AvtaleID` and brukernavn = '"+username+"' and (Starttid between '"+monday+"' and '"+sunday+"');";
+		String query = "select * from Avtale inner join `Deltar_pŒ` on `Deltar_pŒ`.`AvtaleID` = `Avtale`.`AvtaleID` and brukernavn = '"+username+"' and (Starttid between '"+monday+"' and '"+sunday+"');";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
@@ -265,10 +270,11 @@ private String pwd = "gruppe16";
 			Date date = rs.getDate("Dato");
 			Timestamp start = rs.getTimestamp("Starttid");
 			Timestamp end = rs.getTimestamp("Sluttid");
+			String sted = rs.getString("Sted");
 			ArrayList<User> participants = getUserParticipants(id);
 			Room room = getBookedRoom(id);
 			User creator = getCreator(id);
-			return new EventModel(id, desc, date, start, end, participants, creator, room, "");
+			return new EventModel(id, desc, date, start, end, participants, creator, room, sted);
 		}
 		return null;
 	}
@@ -297,14 +303,14 @@ private String pwd = "gruppe16";
 
 	public ResultSet getStatusForAppointment(String username, int appID) throws SQLException{
 		stmt = con.createStatement();
-		String query = "select brukernavn, Godkjenning from Deltar_på WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
+		String query = "select brukernavn, Godkjenning from Deltar_pŒ WHERE brukernavn = '"+username+"' and AvtaleID = "+appID+";";
 		rs = stmt.executeQuery(query);
 		return rs;
 	}
 
 	public Room getBookedRoom(int id) throws SQLException{
 		stmt = con.createStatement();
-		String query = "select Møterom.RomID, sted FROM Møterom inner join Avtalested on Møterom.RomID = Avtalested.RomID where AvtaleID = "+id+";";
+		String query = "select M¿terom.RomID, sted FROM M¿terom inner join Avtalested on M¿terom.RomID = Avtalested.RomID where AvtaleID = "+id+";";
 		rs = stmt.executeQuery(query);
 		if (rs.next()) {
 			return new Room(rs.getInt("RomID"), rs.getString("sted"),0);
@@ -330,7 +336,7 @@ private String pwd = "gruppe16";
 	public ArrayList<Room> getAvailableRooms(Timestamp startTime, Timestamp endTime, int capacity) throws SQLException {
 		stmt = con.createStatement();
 		ArrayList<Room> AvailableRooms = new ArrayList<Room>();
-		String query = "SELECT RomID, Sted, Antall_pers FROM Møterom WHERE RomID NOT IN " +
+		String query = "SELECT RomID, Sted, Antall_pers FROM M¿terom WHERE RomID NOT IN " +
 				"(SELECT RomID FROM Avtalested WHERE AvtaleID IN " +
 				"(SELECT AvtaleID FROM Avtale WHERE " +
 				"(Starttid >= ? AND Starttid <= ?) OR " +

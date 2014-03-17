@@ -1,4 +1,5 @@
 package calendar;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -11,7 +12,7 @@ import javax.mail.internet.MimeMessage;
  
 public class Emailsys {
  
-  public static void main(String[] args) {
+  public Emailsys(ArrayList<String> emails) {
  
     final String username = "prosjektvar2014@gmail.com";
     final String password = "Prosjekt til Det er Over";
@@ -28,13 +29,13 @@ public class Emailsys {
         return new PasswordAuthentication(username, password);
       }
       });
- 
+ for (String mail : emails) {
     try {
  
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress("prosjektvar2014@gmail.com"));
       message.setRecipients(Message.RecipientType.TO,
-        InternetAddress.parse("sondre.erstad@gmail.com"));
+        InternetAddress.parse(mail));
       message.setSubject("Testing Subject");
       message.setText("Dear Mail Crawler,"
         + "\n\n No spam to my email, please!");
@@ -46,5 +47,6 @@ public class Emailsys {
     } catch (MessagingException e) {
       throw new RuntimeException(e);
     }
+  }
   }
 }

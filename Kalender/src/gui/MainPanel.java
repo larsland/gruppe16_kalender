@@ -71,7 +71,9 @@ import javax.swing.JTextPane;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+
 import java.awt.Font;
+
 import javax.swing.SwingConstants;
 
 public class MainPanel extends JFrame {
@@ -79,7 +81,7 @@ public class MainPanel extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private static CalendarModel model;
-	private String username;
+	private static String username;
 	private static JPanel appointment;
 	private static JPanel participants;
 	private static App app = new App();
@@ -102,6 +104,10 @@ public class MainPanel extends JFrame {
 	private static JPanel statusBtnPanel;
 	private static JPanel creatorBtnPanel;
 
+	
+	public static String getUsername() {
+		return username;
+	}
 
 	/**
 	 * Create the frame.
@@ -295,7 +301,7 @@ public class MainPanel extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JTable target = (JTable) e.getSource();
-				System.out.println(target.getSelectedColumn() + " , " + target.getSelectedRow());
+				clearButtons();
 				model.getListModel().removeAllElements();
 				model.getParticipantsModel().removeAllElements();
 				
@@ -470,7 +476,18 @@ public class MainPanel extends JFrame {
 		btnChangeEvent.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//open change event panel with info
+				EventQueue.invokeLater(new Runnable() {
+
+					public void run() {
+						try {
+							JFrame editFrame = new EditEvent(getUsername(), appID);
+							editFrame.setVisible(true);
+							editFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
 		});
 		btnDeleteCreator.addActionListener(new ActionListener() {
