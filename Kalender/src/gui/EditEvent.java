@@ -164,7 +164,7 @@ public class EditEvent extends JFrame {
     btnExit.setBounds(194, 493, 93, 25);
     btnExit.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        frame.dispose();
+        dispose();
       }
     });
     contentPane.add(btnExit);
@@ -250,10 +250,11 @@ public class EditEvent extends JFrame {
     contentPane.add(capacity);
 
     memberList = new CheckCombo();
-    JPanel combo = memberList.getContent();
+    JPanel combo = memberList.getSelectedContent(avtale.getParticipants());
     combo.setVisible(true);
     combo.setBounds(123, 450, 162, 35);
     contentPane.add(combo);
+    
   }
 
   public void fillRoomList() throws SQLException {

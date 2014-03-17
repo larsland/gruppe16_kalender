@@ -68,6 +68,40 @@ public class CheckCombo extends JComboBox implements ActionListener {
     panel.add(combo);
     return panel;
   }
+  
+  public JPanel getSelectedContent(ArrayList<User> selected) throws SQLException {
+	    ArrayList<User> names = new ArrayList<User>();
+	    names = db.getAllUsers();
+	    ArrayList<User> stringNames = new ArrayList<User>();
+	    for (int i = 0; i < names.size(); i++) {
+	      stringNames.add(names.get(i));
+	    }
+
+	    User[] ids = new User[stringNames.size()];
+	    Boolean[] values = new Boolean[stringNames.size()];
+
+	    for (int i = 0; i < stringNames.size(); i++) {
+	      ids[i] = stringNames.get(i);
+	      if (stringNames.get(i).getName().equals("Lars")) {
+	    	  values[i] = Boolean.TRUE;
+	      }
+	      else{
+	    	  values[i] = Boolean.FALSE;
+	      }
+
+	    }
+
+	    CheckComboStore[] stores = new CheckComboStore[ids.length];
+	    for (int j = 0; j < ids.length; j++)
+	      stores[j] = new CheckComboStore(ids[j], values[j]);
+	    JComboBox combo = new JComboBox(stores);
+	    combo.setRenderer(new CheckComboRenderer());
+	    combo.addActionListener(this);
+	    JPanel panel = new JPanel();
+	    panel.add(combo);
+	    return panel;
+	  }
+  
 
 }
 
