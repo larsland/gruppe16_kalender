@@ -514,4 +514,20 @@ public class MainPanel extends JFrame {
 		statusBtnPanel.removeAll();
 		creatorBtnPanel.removeAll();
 	}
+	
+	class update extends TimerTask {
+	    public void run() {
+	    	try {
+				model.setThisWeeksAppointments(0);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			notification.setValues(username);
+			notPanel.removeAll();
+			notList = new JList(notification.getNotMessages().toArray());
+			notList.addListSelectionListener(MainPanel.this);
+			notPanel.add(notList);
+			btnNoti.setText(notification.getNotAvtaleID().size() + "");	    
+	    }
+	 }
 }
