@@ -38,7 +38,7 @@ public class Room {
 	}
 	
 	public String toString() {
-		return location;
+		return location + ' ' + '(' + capacity + ')';
 	}
 
 }
