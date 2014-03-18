@@ -514,7 +514,7 @@ public class MainPanel extends JFrame {
 		statusBtnPanel.removeAll();
 		creatorBtnPanel.removeAll();
 	}
-	
+
 	class update extends TimerTask {
 	    public void run() {
 	    	try {
