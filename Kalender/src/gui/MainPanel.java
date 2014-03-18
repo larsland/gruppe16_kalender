@@ -506,11 +506,11 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 
 	class update extends TimerTask {
 	    public void run() {
-	    	try {
+	    	/*try {
 				model.setThisWeeksAppointments(0);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			}*/
 			notification.setValues(username);
 			notPanel.removeAll();
 			notList = new JList(notification.getNotMessages().toArray());

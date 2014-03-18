@@ -46,9 +46,12 @@ public class EventRender implements ListCellRenderer {
 				l.setText("Du har avslått");
 				l.setIcon(rejectedIcon);
 			}
-			else {
+			else if (((String) value).equals("0")) {
 				l.setText("Du har ikke svart");
 				l.setIcon(pendingIcon);
+			}
+			else {
+				l.setText(" ");
 			}
 		}
 		
