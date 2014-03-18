@@ -119,6 +119,8 @@ public class CalendarModel extends DefaultTableModel {
 			}
 		}
 		}
+		this.fireTableDataChanged();
+		
 	}
 
 	public void insertIntoCalendar(ResultSet rs, String username, Color color) throws SQLException{
