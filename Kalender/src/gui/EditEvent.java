@@ -364,15 +364,16 @@ public class EditEvent extends JFrame {
       System.out.println(deletedPersons);
 
       if (!txtLocation.isVisible()) {
+    	  System.out.println("heiheihei");
         try {
-        	db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 1);
+        	db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, ((Room) cbRoom.getSelectedItem()).getRoomID(), null);
         } catch (SQLException e1) {
           e1.printStackTrace();
         }
       }
       else if (txtLocation.isVisible()) {
         try {
-        db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 1);
+        db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 7, txtLocation.getText());
         } catch (SQLException e1) {
           e1.printStackTrace();
         }

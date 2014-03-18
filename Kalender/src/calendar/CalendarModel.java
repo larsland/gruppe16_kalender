@@ -31,6 +31,7 @@ public class CalendarModel extends DefaultTableModel {
 	private static DefaultListModel listModel = new EventModel();
 	private static DefaultListModel participantsModel = new DefaultListModel();
 	private static JPanel appointment = new JPanel();
+	private static int selectedAppId = 0;
 	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
 	private ArrayList<User> otherPersons = new ArrayList<User>();
@@ -177,6 +178,7 @@ public class CalendarModel extends DefaultTableModel {
 		CalendarModel.getParticipantsModel().removeAllElements();
 		ResultSet rs;
 		ResultSet rs2;
+		selectedAppId = appId;
 		try {
 			rs = db.getAppointmentInfo(appId);
 			rs2 = db.getParticipantsInAppointment(appId);
@@ -261,6 +263,9 @@ public class CalendarModel extends DefaultTableModel {
 
 	public void setOtherPersons(ArrayList<User> selectedPersons) {
 		this.otherPersons = selectedPersons;
+	}
+	public static int getSelectedAppId() {
+		return selectedAppId;
 	}
 
 

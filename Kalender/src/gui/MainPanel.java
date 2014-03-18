@@ -103,6 +103,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	private JList list;
 	private static JPanel statusBtnPanel;
 	private static JPanel creatorBtnPanel;
+	private static JButton btnUpdate;
 
 	
 	public static String getUsername() {
@@ -344,6 +345,20 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		});
 		btnLogout.setBounds(944, 8, 97, 25);
 		contentPane.add(btnLogout);
+		
+		btnUpdate = new JButton("Oppdater");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				/*try {
+					model.setThisWeeksAppointments(0);
+					model.fillSidePanel(model.getSelectedAppId());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}*/
+			}
+		});
+		btnUpdate.setBounds(944, 608, 97, 25);
+		contentPane.add(btnUpdate);
 
 		JPanel combo = personsComboBox.getContent();
 		combo.setBounds(40, 620, 190, 30);
@@ -503,6 +518,10 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		statusBtnPanel.removeAll();
 		creatorBtnPanel.removeAll();
 	}
+	
+	public static JButton getBtnUpdate() {
+		return btnUpdate;
+	}
 
 	class update extends TimerTask {
 	    public void run() {
@@ -511,6 +530,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}*/
+	    	//MainPanel.getBtnUpdate().doClick();
 			notification.setValues(username);
 			notPanel.removeAll();
 			notList = new JList(notification.getNotMessages().toArray());

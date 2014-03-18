@@ -90,7 +90,7 @@ private String pwd = "gruppe16";
 
 	/*
 	 * Create appointment
-	 * TODO: Mï¿½teleder, Møterom/sted
+	 * TODO: MÂteleder, mÂterom/sted
 	 */
 	public void createAppointment(Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, int romId, String sted) throws SQLException{
 		stmt = con.createStatement();
@@ -121,14 +121,10 @@ private String pwd = "gruppe16";
 	    }
 
 	    //Legg til Møterom
-	    if (sted == null) {
 	    	stmt = con.createStatement();
 	    	String query3 = "INSERT INTO Avtalested VALUES ("+key+", "+romId+");";
 	    	stmt.execute(query3);
-		}
-	    else{
-	    	
-	    }
+	    
 
 	    //Send varsel
 	   String query4 = "INSERT INTO Varsel VALUES (?,?,?,CURRENT_TIMESTAMP);";
@@ -159,15 +155,16 @@ private String pwd = "gruppe16";
 	 * Endre avtale
 	 * TODO rom, varsel
 	 */
-	public void updateAppointment(int id, Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, ArrayList<String> deletedPersons ,int romId) throws SQLException{
-		String query1 = "UPDATE Avtale SET Dato = ?, Starttid = ?, Sluttid = ?, Beskrivelse = ?, Opprettet_av = ? WHERE AvtaleID = ?;";
+	public void updateAppointment(int id, Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, ArrayList<String> deletedPersons ,int romId, String otherPlace) throws SQLException{
+		String query1 = "UPDATE Avtale SET Dato = ?, Starttid = ?, Sluttid = ?, Beskrivelse = ?, Opprettet_av = ?, Sted = ? WHERE AvtaleID = ?;";
 		PreparedStatement st = con.prepareStatement(query1);
 		st.setDate(1, date);
 		st.setTimestamp(2, starttime);
 		st.setTimestamp(3, endtime);
 		st.setString(4, desc);
 		st.setString(5, creator);
-		st.setInt(6, id);
+		st.setString(6, otherPlace);
+		st.setInt(7, id);
 		st.executeUpdate();
 
 		//Slett gamle
@@ -184,6 +181,12 @@ private String pwd = "gruppe16";
 		      st.setInt(3, 0);
 		      st.executeUpdate();
 		   }
+		
+		String query3 = "UPDATE Avtalested SET RomID = ? WHERE AvtaleID = ?;";
+		st = con.prepareStatement(query3);
+		st.setInt(1, romId);
+		st.setInt(2, id);
+		st.executeUpdate();
 
 	}
 
@@ -392,8 +395,6 @@ private String pwd = "gruppe16";
 				"' AND Brukernavn = '" + username + "' AND Meldingstekst = '" + meld + "';";
 		stmt.executeUpdate(query);
 	}
-
-
 
 
 }
