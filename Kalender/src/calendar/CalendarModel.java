@@ -185,7 +185,7 @@ public class CalendarModel extends DefaultTableModel {
 			if (rs.next()) {
 				String sted = rs.getString("avtale_sted");
 				if (sted == null) {
-					rs.getString("Sted");
+					sted = rs.getString("Sted");
 				}
 				MainPanel.clearButtons();
 				CalendarModel.getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
