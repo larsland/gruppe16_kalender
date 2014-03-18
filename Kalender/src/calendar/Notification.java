@@ -73,7 +73,10 @@ public class Notification {
 			if (rs.next()) {
 				String starttid = rs.getString("Starttid").substring(11, 16);
 				db.sendNotificationToAll(appId, username, message + "kl: " + starttid);
-				db.sendNotificationToOne(appId, rs.getString("Opprettet_av"), message + "kl: " + starttid);
+				String tempCreator = rs.getString("Opprettet_av");
+				if (!tempCreator.equals(username)) {
+					db.sendNotificationToOne(appId, tempCreator, message + "kl: " + starttid);
+				}
 			}
 		} 
 		catch (SQLException e) {
