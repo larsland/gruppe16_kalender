@@ -76,7 +76,7 @@ import java.awt.Font;
 
 import javax.swing.SwingConstants;
 
-public class MainPanel extends JFrame {
+public class MainPanel extends JFrame  implements ListSelectionListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -128,27 +128,16 @@ public class MainPanel extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		
+		Timer timer = new Timer();
+		timer.schedule(new update(), 0, 10000);
 
 		notPanel = new JPopupMenu();
 		notPanel.setLayout(new BorderLayout());
 		notList = new JList(notification.getNotMessages().toArray());
 		
 
-		notList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                notPanel.setVisible(false);
-                CalendarModel.fillSidePanel(notification.getNotAvtaleID().get(notList.getSelectedIndex()));
-                notification.removeNoti(notList.getSelectedIndex());
-                notPanel.remove(notList);
-                notList = new JList(notification.getNotMessages().toArray());
-                notPanel.add(notList);
-                notList.addListSelectionListener(this);
-
-                btnNoti.setLabel(notification.getNotAvtaleID().size() + "");
-            }
-		});
+		notList.addListSelectionListener(this);
 		
 		if (notification.getNotAvtaleID().size() > 0) {
 			       try{
@@ -530,4 +519,17 @@ public class MainPanel extends JFrame {
 			btnNoti.setText(notification.getNotAvtaleID().size() + "");	    
 	    }
 	 }
+
+	@Override
+	public void valueChanged(ListSelectionEvent arg0) {
+		notPanel.setVisible(false);
+        CalendarModel.fillSidePanel(notification.getNotAvtaleID().get(notList.getSelectedIndex()));
+        notification.removeNoti(notList.getSelectedIndex());
+        notPanel.remove(notList);
+        notList = new JList(notification.getNotMessages().toArray());
+        notPanel.add(notList);
+        notList.addListSelectionListener(this);
+
+        btnNoti.setText(notification.getNotAvtaleID().size() + "");
+	}
 }
