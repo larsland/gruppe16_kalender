@@ -268,11 +268,11 @@ public class EditEvent extends JFrame {
     if (avtale.getRoom() != null) {
     	fillRoomList();
     	for (int i = 0; i < cbRoom.getModel().getSize(); i++) {
-    		if (cbRoom.getModel().getElementAt(i).toString().equals(avtale.getRoom())) {
+    		if (avtale.getRoom().equals(cbRoom.getModel().getElementAt(i).toString())) {
     			cbRoom.setSelectedIndex(i);
 			}
 		}
-	} else{
+	} if(avtale.getRoom().equals("Annet (0)")){
 		cbRoom.setSelectedIndex(cbRoom.getModel().getSize() - 1);
 	}
     
@@ -281,7 +281,7 @@ public class EditEvent extends JFrame {
   public void fillRoomList() throws SQLException {
 	Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getStartStamp().getHours(), getStartStamp().getMinutes(), 0, 0);
     Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
-    rooms = db.getAvailableRooms(getStartStamp(), getEndStamp(), (Integer) capacity.getValue());
+    rooms = db.getAvailableRoomsOnBookedAppointment(start, end, (Integer) capacity.getValue(), avtale.getId());
 
     contentPane.remove(cbRoom);
 
@@ -353,18 +353,36 @@ public class EditEvent extends JFrame {
       Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
       ArrayList<String> participants = new ArrayList<String>();
       java.sql.Date dateSql = new java.sql.Date(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate());
-      System.out.println(participants);
       for (User u : memberList.getSelectedPersons()) {
         participants.add(u.getUsername());
       }
       ArrayList<String> deletedPersons = new ArrayList<String>();
       for (User u : avtale.getParticipants()) {
     	  deletedPersons.add(u.toString());
-	}
-      System.out.println(deletedPersons);
+      }
+      System.out.println(participants);
+      
+      for (String string : deletedPersons) {
+		if (participants.contains(string)) {
+			try {
+				db.sendNotificationToOne(avtale.getId(), string, "Invitert");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		else{
+			
+				try {
+					db.sendNotificationToOne(avtale.getId(), string, "Endret");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		}
+      }
 
       if (!txtLocation.isVisible()) {
-    	  System.out.println("heiheihei");
         try {
         	db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, ((Room) cbRoom.getSelectedItem()).getRoomID(), null);
         } catch (SQLException e1) {

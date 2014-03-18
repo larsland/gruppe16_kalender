@@ -303,6 +303,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		table.setRowHeight(55);
 		table.setRowSelectionAllowed(true);
 	    table.setColumnSelectionAllowed(true);
+	    table.getTableHeader().setReorderingAllowed(false);
 
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
