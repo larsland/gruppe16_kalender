@@ -33,7 +33,11 @@ public class CheckCombo extends JComboBox implements ActionListener {
 		  selectedPersons.add(username);
 	  }
 	  else{
-		  selectedPersons.remove(username);
+		  for (User u : getSelectedPersons()) {
+			  if (u.getUsername().equals(username.getUsername())) {
+				  selectedPersons.remove(u);
+			}
+		}
 	  }
   }
 
@@ -91,7 +95,7 @@ public class CheckCombo extends JComboBox implements ActionListener {
 
 	    for (int i = 0; i < stringNames.size(); i++) {
 	      ids[i] = stringNames.get(i);
-	      if (inSelected(stringNames.get(i).getUsername(), selected)) {
+	      if (inSelected(stringNames.get(i).getName(), selected)) {
 	    	  values[i] = Boolean.TRUE;
 	      }
 	      else{

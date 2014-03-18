@@ -233,7 +233,7 @@ private String pwd = "gruppe16";
 				+ " inner join Person on Deltar_på.brukernavn = Person.brukernavn WHERE Deltar_på.AvtaleID = "+id+";";
 		rs = stmt.executeQuery(query);
 		while (rs.next()) {
-			p.add(new User(rs.getString("brukernavn"), rs.getString("Navn"), rs.getInt("Godkjenning")));
+			p.add(new User(rs.getString("Navn"), rs.getString("brukernavn"), rs.getInt("Godkjenning")));
 		}
 		return p;
 	}

@@ -374,12 +374,18 @@ public class AddEvent extends JFrame {
             else if (txtLocation.isVisible()) {
                 event = new EventModel(txtLocation.getText(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
                 try {
-                    db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, 0,txtLocation.getText());
+                    db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, 7,txtLocation.getText());
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
+            try {
+				MainPanel.fireUpdate();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
             dispose();
                  
         }

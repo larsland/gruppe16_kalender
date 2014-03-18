@@ -262,6 +262,9 @@ public class EditEvent extends JFrame {
     combo.setVisible(true);
     combo.setBounds(123, 450, 162, 35);
     contentPane.add(combo);
+    for (User u : avtale.getParticipants()) {
+    	memberList.setSelectedPersons(u, true);
+	}
 
     txtDate.setText(formatDate(calendar.getDate()));
 
@@ -358,28 +361,27 @@ public class EditEvent extends JFrame {
       }
       ArrayList<String> deletedPersons = new ArrayList<String>();
       for (User u : avtale.getParticipants()) {
-    	  deletedPersons.add(u.toString());
+    	  deletedPersons.add(u.getUsername());
       }
-      System.out.println(participants);
       
-      for (String string : deletedPersons) {
-		if (participants.contains(string)) {
-			try {
-				db.sendNotificationToOne(avtale.getId(), string, "Invitert");
+      java.util.Date now = new java.util.Date();
+      String nowString = now.getHours() +":"+now.getMinutes(); 
+      for (String username : participants) {
+    	  if (!deletedPersons.contains(username)) {
+    		  try {
+				db.sendNotificationToOne(avtale.getId(), username, nowString + "| Du har blitt invitert");
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
-		else{
-			
-				try {
-					db.sendNotificationToOne(avtale.getId(), string, "Endret");
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}
+    	  }else{
+    		 try {
+				db.sendNotificationToOne(avtale.getId(), username,nowString + "| Avtalen er endret");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+    	  }
       }
 
       if (!txtLocation.isVisible()) {
@@ -396,6 +398,12 @@ public class EditEvent extends JFrame {
           e1.printStackTrace();
         }
       }
+      try {
+			MainPanel.fireUpdate();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}      
+      dispose();
 
     }
   }

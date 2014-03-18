@@ -412,12 +412,12 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		
 		
 		Timer timer = new Timer();
-		timer.schedule(new update(model), 10000, 180000);
+		timer.schedule(new update(model), 300000, 1800000);
 	}
 	
 	public static void setStatusChangeButtons(final int appId, String status) {
 		JButton btnAccept = new JButton("Godta");
-		JButton btnDecline = new JButton("Avslå");
+		JButton btnDecline = new JButton("AvslŒ");
 		JButton btnDeleteInvited = new JButton("Slett");
 		creatorBtnPanel.add(btnDeleteInvited);
 		statusBtnPanel.add(btnAccept);
@@ -506,7 +506,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		statusBtnPanel.removeAll();
 		creatorBtnPanel.removeAll();
 	}
-		
+
 
 	class update extends TimerTask {
 	    
@@ -547,4 +547,11 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 
         btnNoti.setText(notification.getNotAvtaleID().size() + "");
 	}
+
+	public static void fireUpdate() throws SQLException {
+		model.setThisWeeksAppointments(0);
+		clearButtons();
+		
+	}
+	
 }
