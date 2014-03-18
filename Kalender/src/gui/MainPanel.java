@@ -183,6 +183,7 @@ public class MainPanel extends JFrame {
 		JButton btnNewButton = new JButton("Forrige uke");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				clearButtons();
 				try {
 					model.setThisWeeksAppointments(-1);
 					lblMandag.setText(model.getDateString(1));
@@ -237,6 +238,7 @@ public class MainPanel extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				clearButtons();
 				try {
 					model.setThisWeeksAppointments(1);
 					lblMandag.setText(model.getDateString(1));
@@ -354,7 +356,7 @@ public class MainPanel extends JFrame {
 		btnLogout.setBounds(944, 8, 97, 25);
 		contentPane.add(btnLogout);
 
-			JPanel combo = personsComboBox.getContent();
+		JPanel combo = personsComboBox.getContent();
 		combo.setBounds(40, 620, 190, 30);
 		combo.setVisible(true);
 		contentPane.add(combo);
@@ -363,6 +365,7 @@ public class MainPanel extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				clearButtons();
 				model.setOtherPersons(personsComboBox.getSelectedPersons());
 				otherPersonsListModel.removeAllElements();
 				try {

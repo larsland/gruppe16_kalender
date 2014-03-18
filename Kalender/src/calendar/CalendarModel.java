@@ -114,7 +114,6 @@ public class CalendarModel extends DefaultTableModel {
 			try {
 				addOtherPersonsAppointments(otherPersons.get(i).getUsername(), personColors[i]);
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -124,6 +123,9 @@ public class CalendarModel extends DefaultTableModel {
 	public void insertIntoCalendar(ResultSet rs, String username, Color color) throws SQLException{
 		while (rs.next()) {
 			int day = rs.getTimestamp("Starttid").getDay();
+			if (day == 0) {
+				day = 7;
+			}
 			int hour = rs.getTimestamp("Starttid").getHours();
 			insertEvent(rs.getInt("AvtaleID"), hour, day, username, color);
 		}
@@ -144,7 +146,7 @@ public class CalendarModel extends DefaultTableModel {
 		listModel.removeAllElements();
 
 		// Fjern alle objekter i JPanel Cell
-		for (int i = 1; i < getRowCount(); i++) {
+		for (int i = 0; i < getRowCount(); i++) {
 			for (int j = 1; j < getColumnCount();j++) {
 				((JPanel) this.getValueAt(i, j)).removeAll();
 			}

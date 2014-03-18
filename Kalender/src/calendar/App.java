@@ -90,14 +90,6 @@ public class App implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	/*	try {
-			newAppointmentFrame = new AddEvent(this.username);
-			newAppointmentFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		newAppointmentFrame.setVisible(true);*/
 		EventQueue.invokeLater(new Runnable() {
 
 			public void run() {

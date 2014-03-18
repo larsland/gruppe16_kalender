@@ -103,6 +103,7 @@ public class EditEvent extends JFrame {
 
 
   public void initGUI() throws SQLException {
+	  
 
     //----------LABELS--------------------------------------------------
     JLabel lblStartTime = new JLabel("Start tid:");
@@ -171,6 +172,8 @@ public class EditEvent extends JFrame {
     btnConfirmDate = new JButton("Bekfreft dato");
     btnConfirmDate.setFont(new Font("Dialog", Font.BOLD, 11));
     btnConfirmDate.setBounds(219, 80, 123, 25);
+
+
     btnConfirmDate.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         txtDate.setText(formatDate(calendar.getDate()));
@@ -204,6 +207,10 @@ public class EditEvent extends JFrame {
     txtLocation.setBounds(123, 427, 218, 19);
     txtLocation.setVisible(false);
     contentPane.add(txtLocation);
+    if (avtale.getOtherPlace() != null) {
+    	txtLocation.setVisible(true);
+    	txtLocation.setText(avtale.getOtherPlace());
+	}
     txtLocation.setColumns(10);
 
     //----------OTHER COMPONENTS--------------------------------------------------
@@ -216,6 +223,7 @@ public class EditEvent extends JFrame {
     calendar = new JCalendar();
     calendar.setBounds(12, 116, 329, 133);
     calendar.setBorder(border);
+    calendar.setDate(new java.util.Date(avtale.getSqlDate().getYear(), avtale.getSqlDate().getMonth(), avtale.getSqlDate().getDate()));
     contentPane.add(calendar);
 
     startTime = new JSpinner(new SpinnerDateModel());
@@ -254,10 +262,25 @@ public class EditEvent extends JFrame {
     combo.setVisible(true);
     combo.setBounds(123, 450, 162, 35);
     contentPane.add(combo);
+
+    txtDate.setText(formatDate(calendar.getDate()));
+
+    if (avtale.getRoom() != null) {
+    	fillRoomList();
+    	for (int i = 0; i < cbRoom.getModel().getSize(); i++) {
+    		if (cbRoom.getModel().getElementAt(i).toString().equals(avtale.getRoom())) {
+    			cbRoom.setSelectedIndex(i);
+			}
+		}
+	} else{
+		cbRoom.setSelectedIndex(cbRoom.getModel().getSize() - 1);
+	}
     
   }
 
   public void fillRoomList() throws SQLException {
+	Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getStartStamp().getHours(), getStartStamp().getMinutes(), 0, 0);
+    Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
     rooms = db.getAvailableRooms(getStartStamp(), getEndStamp(), (Integer) capacity.getValue());
 
     contentPane.remove(cbRoom);
@@ -330,24 +353,27 @@ public class EditEvent extends JFrame {
       Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
       ArrayList<String> participants = new ArrayList<String>();
       java.sql.Date dateSql = new java.sql.Date(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate());
+      System.out.println(participants);
       for (User u : memberList.getSelectedPersons()) {
         participants.add(u.getUsername());
       }
+      ArrayList<String> deletedPersons = new ArrayList<String>();
+      for (User u : avtale.getParticipants()) {
+    	  deletedPersons.add(u.toString());
+	}
+      System.out.println(deletedPersons);
+
       if (!txtLocation.isVisible()) {
-        event = new EventModel(cbRoom.getSelectedItem().toString(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
         try {
-          db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, ((Room) cbRoom.getSelectedItem()).getRoomID(), null);
+        	db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 1);
         } catch (SQLException e1) {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
         }
       }
       else if (txtLocation.isVisible()) {
-        event = new EventModel(txtLocation.getText(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
         try {
-          db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, 0, txtLocation.getText());
+        db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 1);
         } catch (SQLException e1) {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
         }
       }

@@ -69,6 +69,15 @@ public class CheckCombo extends JComboBox implements ActionListener {
     return panel;
   }
   
+  public boolean inSelected(String name, ArrayList<User> selected){
+	 for (User user : selected) {
+		 if (name.equals(user.getName())) {
+			 return true;
+		}
+	}
+	 return false;
+  }
+  
   public JPanel getSelectedContent(ArrayList<User> selected) throws SQLException {
 	    ArrayList<User> names = new ArrayList<User>();
 	    names = db.getAllUsers();
@@ -82,7 +91,7 @@ public class CheckCombo extends JComboBox implements ActionListener {
 
 	    for (int i = 0; i < stringNames.size(); i++) {
 	      ids[i] = stringNames.get(i);
-	      if (stringNames.get(i).getName().equals("Lars")) {
+	      if (inSelected(stringNames.get(i).getUsername(), selected)) {
 	    	  values[i] = Boolean.TRUE;
 	      }
 	      else{

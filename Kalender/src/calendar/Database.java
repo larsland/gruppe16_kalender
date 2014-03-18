@@ -94,14 +94,15 @@ private String pwd = "gruppe16";
 	 */
 	public void createAppointment(Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, int romId, String sted) throws SQLException{
 		stmt = con.createStatement();
-		String query = "INSERT INTO Avtale (Dato, Starttid, Sluttid, Beskrivelse, Opprettet_av) VALUES "
-				+ "(?,?,?,?,?)";
+		String query = "INSERT INTO Avtale (Dato, Starttid, Sluttid, Beskrivelse, Opprettet_av, Sted) VALUES "
+				+ "(?,?,?,?,?,?)";
 		PreparedStatement st = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		st.setDate(1, date);
 		st.setTimestamp(2, starttime);
 		st.setTimestamp(3, endtime);
 		st.setString(4, desc);
 		st.setString(5, creator);
+		st.setString(6, sted);
 		st.executeUpdate();
 
 		// Lagre siste id
@@ -391,6 +392,8 @@ private String pwd = "gruppe16";
 				"' AND Brukernavn = '" + username + "' AND Meldingstekst = '" + meld + "';";
 		stmt.executeUpdate(query);
 	}
+
+
 
 
 }

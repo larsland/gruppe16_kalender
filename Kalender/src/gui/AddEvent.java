@@ -44,6 +44,7 @@ import javax.swing.JScrollBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 
+import calendar.CalendarModel;
 import calendar.Database;
 import calendar.Emailsys;
 import calendar.EventModel;
@@ -169,7 +170,7 @@ public class AddEvent extends JFrame {
         });
         contentPane.add(btnExit);
          
-        btnConfirmDate = new JButton("Bekfreft dato");
+        btnConfirmDate = new JButton("Bekreft dato");
         btnConfirmDate.setFont(new Font("Dialog", Font.BOLD, 11));
         btnConfirmDate.setBounds(219, 80, 123, 25);
         btnConfirmDate.addActionListener(new ActionListener() {
@@ -267,7 +268,9 @@ public class AddEvent extends JFrame {
     }
          
     public void fillRoomList() throws SQLException {
-        rooms = db.getAvailableRooms(getStartStamp(), getEndStamp(), (Integer) capacity.getValue());
+    	Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getStartStamp().getHours(), getStartStamp().getMinutes(), 0, 0);
+        Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
+        rooms = db.getAvailableRooms(start, end, (Integer) capacity.getValue());
          
         contentPane.remove(cbRoom);
          
@@ -377,6 +380,7 @@ public class AddEvent extends JFrame {
                     e1.printStackTrace();
                 }
             }
+            dispose();
                  
         }
     }
