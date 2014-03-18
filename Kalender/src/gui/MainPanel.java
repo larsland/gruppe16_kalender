@@ -425,7 +425,7 @@ public class MainPanel extends JFrame {
 	
 	public static void setStatusChangeButtons(final int appId, String status) {
 		JButton btnAccept = new JButton("Godta");
-		JButton btnDecline = new JButton("AvslŒ");
+		JButton btnDecline = new JButton("Avslå");
 		JButton btnDeleteInvited = new JButton("Slett");
 		creatorBtnPanel.add(btnDeleteInvited);
 		statusBtnPanel.add(btnAccept);
