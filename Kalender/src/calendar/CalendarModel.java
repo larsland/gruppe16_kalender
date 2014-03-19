@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
@@ -63,6 +64,8 @@ public class CalendarModel extends DefaultTableModel {
 		tmpDate.setDate(tmpDate.getDate() + (day - 1));
 		return (tmpDate.getDate()) + "/" + (tmpDate.getMonth() + 1);
 	}
+
+	
 
 
 	public CalendarModel(String username) throws SQLException {
@@ -147,6 +150,7 @@ public class CalendarModel extends DefaultTableModel {
 	public void clear() throws SQLException{
 
 		listModel.removeAllElements();
+		
 
 		// Fjern alle objekter i JPanel Cell
 		for (int i = 0; i < getRowCount(); i++) {

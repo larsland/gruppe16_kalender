@@ -91,7 +91,7 @@ public class AddEvent extends JFrame {
  
     public AddEvent(String username) throws SQLException {
         this.username = username;
-        numMembers = db.getAllUsers().size();
+        numMembers = db.getAllUsers(getUsername()).size();
          
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 356, 569);
@@ -260,7 +260,7 @@ public class AddEvent extends JFrame {
         contentPane.add(capacity);
                  
         memberList = new CheckCombo();
-        JPanel combo = memberList.getContent();
+        JPanel combo = memberList.getContent(getUsername());
         combo.setVisible(true);
         combo.setBounds(123, 450, 162, 35);
         contentPane.add(combo);

@@ -89,7 +89,7 @@ public class EditEvent extends JFrame {
 
   public EditEvent(String username, int id) throws SQLException {
     this.username = username;
-    numMembers = db.getAllUsers().size();
+    numMembers = db.getAllUsers(getUsername()).size();
     avtale = db.getEventModelForAppointment(id);
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -258,7 +258,7 @@ public class EditEvent extends JFrame {
     contentPane.add(capacity);
 
     memberList = new CheckCombo();
-    JPanel combo = memberList.getSelectedContent(avtale.getParticipants());
+    JPanel combo = memberList.getSelectedContent(avtale.getParticipants(), getUsername());
     combo.setVisible(true);
     combo.setBounds(123, 450, 162, 35);
     contentPane.add(combo);

@@ -45,9 +45,9 @@ public class CheckCombo extends JComboBox implements ActionListener {
 	return selectedPersons;
 }
 
-  public JPanel getContent() throws SQLException {
+  public JPanel getContent(String username) throws SQLException {
     ArrayList<User> names = new ArrayList<User>();
-    names = db.getAllUsers();
+    names = db.getAllUsers(username);
     ArrayList<User> stringNames = new ArrayList<User>();
     for (int i = 0; i < names.size(); i++) {
       stringNames.add(names.get(i));
@@ -82,9 +82,9 @@ public class CheckCombo extends JComboBox implements ActionListener {
 	 return false;
   }
   
-  public JPanel getSelectedContent(ArrayList<User> selected) throws SQLException {
+  public JPanel getSelectedContent(ArrayList<User> selected, String username) throws SQLException {
 	    ArrayList<User> names = new ArrayList<User>();
-	    names = db.getAllUsers();
+	    names = db.getAllUsers(username);
 	    ArrayList<User> stringNames = new ArrayList<User>();
 	    for (int i = 0; i < names.size(); i++) {
 	      stringNames.add(names.get(i));

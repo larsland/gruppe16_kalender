@@ -344,7 +344,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		btnLogout.setBounds(944, 8, 97, 25);
 		contentPane.add(btnLogout);
 
-		JPanel combo = personsComboBox.getContent();
+		JPanel combo = personsComboBox.getContent(getUsername());
 		combo.setBounds(40, 620, 190, 30);
 		combo.setVisible(true);
 		contentPane.add(combo);

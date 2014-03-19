@@ -43,11 +43,24 @@ public class App implements ActionListener {
 
 	public void validateUser(String username, String password) throws SQLException, LineUnavailableException, UnsupportedAudioFileException, IOException{
 		if (db.checkPass(username, password)) {
-			mainFrame = new MainPanel(username);
 			this.username = username;
 			loginFrame.setVisible(false);
 			loginFrame.remove(loginFrame);
-			mainFrame.setVisible(true);
+			
+			EventQueue.invokeLater(new Runnable() {
+
+				public void run() {
+					try {
+						mainFrame = new MainPanel(getUsername());
+						mainFrame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
+			
+
 		}
 		else{
 			JOptionPane.showMessageDialog(loginFrame, "Feil brukernavn eller passord!");

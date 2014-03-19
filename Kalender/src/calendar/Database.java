@@ -325,9 +325,9 @@ private String pwd = "gruppe16";
 	/*
 	 * Hent alle brukere i systemet
 	 */
-	public ArrayList getAllUsers() throws SQLException{
+	public ArrayList getAllUsers(String username2) throws SQLException{
 		stmt = con.createStatement();
-		String query = "SELECT Navn, Brukernavn FROM Person;";
+		String query = "SELECT Navn, Brukernavn FROM Person WHERE brukernavn != '"+username2+"';";
 		rs = stmt.executeQuery(query);
 		ArrayList persons = new ArrayList<User>();
 		while (rs.next()) {
