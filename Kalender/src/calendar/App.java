@@ -121,4 +121,22 @@ public class App implements ActionListener {
 	}
 
 
+	public void createApp() {
+		EventQueue.invokeLater(new Runnable() {
+
+			public void run() {
+				try {
+					newAppointmentFrame = new AddEvent(getUsername());
+					newAppointmentFrame.setVisible(true);
+					newAppointmentFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+	}
+
+
 }

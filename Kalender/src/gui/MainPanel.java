@@ -285,16 +285,19 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 				// TODO Auto-generated method stub
 				
 			}
-			
-			@Override
 			public void mouseClicked(MouseEvent e) {
 				JTable target = (JTable) e.getSource();
 				clearButtons();
 				model.getListModel().removeAllElements();
 				model.getParticipantsModel().removeAllElements();
-				
-			}
-		});
+				model.fillSidePanelFromCell(target.getSelectedRow(), model.getDateString(target.getSelectedColumn()));
+				if (e.getClickCount() == 2) {
+					app.createApp();
+				}
+				}
+			});
+			
+			
 
 		table.setRowHeight(55);
 		table.setRowSelectionAllowed(true);
@@ -483,6 +486,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+						clearButtons();
 					}
 				});
 			}
@@ -519,7 +523,12 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		public void run() {
 			try {
 				model.setThisWeeksAppointments(0);
-				model.fillSidePanel(model.getSelectedAppId());
+				if (model.getSelectedAppId() != -1) {
+					model.fillSidePanel(model.getSelectedAppId());
+				}
+				else {
+					model.fillSidePanelFromCell(model.getSelectedY(), model.getSelectedDate());
+				}
 			
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -529,7 +538,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			notList = new JList(notification.getNotMessages().toArray());
 			notList.addListSelectionListener(MainPanel.this);
 			notPanel.add(notList);
-			btnNoti.setText(notification.getNotAvtaleID().size() + "");	
+			btnNoti.setText(notification.getNotAvtaleID().size() + "");	 
 			if (notification.getNotAvtaleID().size() > 0) {
 	            try {
 					playNotSound();
@@ -544,8 +553,9 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 					e.printStackTrace();
 				}
 			}
-		
+			
 	    }
+	 }
 		public void playNotSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException{
 			//ALARM:  https://dl.dropboxusercontent.com/s/6qqbmpe752yo424/alarm.wav?dl=1&token_hash=AAEeweeJW-SuhE-mhAcWpZF-jhkc95k98epwdVOTqCO5Hw
 			java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
@@ -555,7 +565,6 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
             clip.loop(0);
 		}
 		
-	 }
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {

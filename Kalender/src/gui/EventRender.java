@@ -29,7 +29,7 @@ public class EventRender implements ListCellRenderer {
 		l = new JLabel((String) value);
 		l.setBackground(new Color(238, 238, 238));
 		l.setOpaque(true);
-		if (index == 6) {
+		if (index == 7) {
 			if (((String) value).equals("1")) {
 				l.setText("Du har opprettet denne avtalen");
 			}
@@ -37,13 +37,13 @@ public class EventRender implements ListCellRenderer {
 				l.setText("Noen andre har opprettet avtalen");
 			}
 		}
-		if (index == 7) {
+		if (index == 8) {
 			if (((String) value).equals("1")) {
 				l.setText("Du har godtatt");
 				l.setIcon(acceptedIcon);
 			}
 			else if (((String) value).equals("-1")){
-				l.setText("Du har avslått");
+				l.setText("Du har avslŒtt");
 				l.setIcon(rejectedIcon);
 			}
 			else if (((String) value).equals("0")) {

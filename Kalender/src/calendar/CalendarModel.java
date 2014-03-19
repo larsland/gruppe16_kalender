@@ -36,6 +36,8 @@ public class CalendarModel extends DefaultTableModel {
 	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
 	private ArrayList<User> otherPersons = new ArrayList<User>();
+	private static String selectedDate;
+	private static int selectedY;
 
 	public static DefaultListModel getListModel() {
 		return listModel;
@@ -189,6 +191,7 @@ public class CalendarModel extends DefaultTableModel {
 			rs = db.getAppointmentInfo(appId);
 			rs2 = db.getParticipantsInAppointment(appId);
 			if (rs.next()) {
+				String[] dato = rs.getTimestamp("Dato").toString().split("-");
 				String sted = rs.getString("avtale_sted");
 				if (sted == null) {
 					sted = rs.getString("Sted");
@@ -196,6 +199,7 @@ public class CalendarModel extends DefaultTableModel {
 				MainPanel.clearButtons();
 				CalendarModel.getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
 				CalendarModel.getListModel().addElement("Avtalen slutter kl: " + rs.getString("Sluttid").substring(11, 16));
+				CalendarModel.getListModel().addElement("Dato: " + dato[2].substring(0, 2) + "/" + dato[1]);
 				CalendarModel.getListModel().addElement("Sted: " + sted);
 				CalendarModel.getListModel().addElement(" ");
 				CalendarModel.getListModel().addElement("Beskrivelse:");
@@ -235,6 +239,39 @@ public class CalendarModel extends DefaultTableModel {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	public void fillSidePanelFromCell(int y, String date) {
+		selectedAppId = -1;
+		selectedY = y;
+		selectedDate = date;
+		
+		int start = (y + 7);
+		if (start < 9) {
+			CalendarModel.getListModel().addElement("Kl: 0" + start + ":00");
+			CalendarModel.getListModel().addElement("Kl: 0" + (start + 1) + ":00");
+		}
+		else if (start < 10) {
+			CalendarModel.getListModel().addElement("Kl: 09:00");
+			CalendarModel.getListModel().addElement("Kl: 10:00");
+		}
+		else if (start == 24) {
+			CalendarModel.getListModel().addElement("Kl: 24:00");
+			CalendarModel.getListModel().addElement("Kl: 01:00");
+		}
+		else {
+			CalendarModel.getListModel().addElement("Kl: " + start + ":00");
+			CalendarModel.getListModel().addElement("Kl: " + (start + 1) + ":00");
+		}
+		CalendarModel.getListModel().addElement("Dato: " + date);
+	}
+	
+	public static int getSelectedY() {
+		return selectedY;
+	}
+	
+	public static String getSelectedDate() {
+		return selectedDate;
 	}
 
 
