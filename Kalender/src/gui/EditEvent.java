@@ -364,6 +364,9 @@ public class EditEvent extends JFrame {
     	  deletedPersons.add(u.getUsername());
       }
       
+      System.out.println(deletedPersons);
+      System.out.println(participants);
+      
       java.util.Date now = new java.util.Date();
       String nowString = now.getHours() +":"+now.getMinutes(); 
       for (String username : participants) {

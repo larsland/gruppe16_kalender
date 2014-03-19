@@ -33,13 +33,14 @@ public class CheckCombo extends JComboBox implements ActionListener {
 		  selectedPersons.add(username);
 	  }
 	  else{
-		  for (User u : getSelectedPersons()) {
-			  if (u.getUsername().equals(username.getUsername())) {
-				  selectedPersons.remove(u);
+//		  selectedPersons.remove(username);
+		  for (int i = 0; i < selectedPersons.size(); i++) {
+			  if (username.getUsername().equals(selectedPersons.get(i).getUsername())); {
+				  selectedPersons.remove(i);
 			}
 		}
-	  }
-  }
+	  }			
+	}
 
   public ArrayList<User> getSelectedPersons() {
 	return selectedPersons;
