@@ -349,32 +349,38 @@ public class AddEvent extends JFrame {
             Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
             ArrayList<String> participants = new ArrayList<String>();
             java.sql.Date dateSql = new java.sql.Date(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate());
-
-            if (addExternContacts != null) {
-				
-            otherContactsList = addExternContacts.getMailList();
-            if (otherContactsList.size() > 0) {
-            	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end);
-			}
-
-			}
+            
 
             for (User u : memberList.getSelectedPersons()) {
                 participants.add(u.getUsername());
             }
             if (!txtLocation.isVisible()) {
-                event = new EventModel(cbRoom.getSelectedItem().toString(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
                 try {
                     db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, ((Room) cbRoom.getSelectedItem()).getRoomID(),null);
+                    if (addExternContacts != null) {
+        				
+                        otherContactsList = addExternContacts.getMailList();
+                        if (otherContactsList.size() > 0) {
+                        	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end, ((Room) cbRoom.getSelectedItem()).getLocation());
+            			}
+
+            			}
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
             else if (txtLocation.isVisible()) {
-                event = new EventModel(txtLocation.getText(), txtDescription.getText(), formatDate(calendar.getDate()), getStartStamp(), getEndStamp(), memberList.getSelectedPersons());
                 try {
                     db.createAppointment(dateSql, start, end, txtDescription.getText(), getUsername(), participants, 7,txtLocation.getText());
+                    if (addExternContacts != null) {
+        				
+                        otherContactsList = addExternContacts.getMailList();
+                        if (otherContactsList.size() > 0) {
+                        	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end, txtLocation.getText());
+            			}
+
+            			}
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();

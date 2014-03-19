@@ -45,6 +45,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 
 import calendar.Database;
+import calendar.Emailsys;
 import calendar.EventModel;
 import calendar.Room;
 import calendar.User;
@@ -59,6 +60,10 @@ import javax.swing.SpinnerNumberModel;
 public class EditEvent extends JFrame {
 
   private Database db = new Database();
+
+  private AddExternContacts addExternContacts;
+  private JButton btnAddOtherContacts;
+
   private EventModel event;
 
   private JPanel contentPane;
@@ -77,7 +82,7 @@ public class EditEvent extends JFrame {
   private CheckCombo memberList;
   private EventModel avtale;
 
-  private ArrayList rooms;
+  private ArrayList rooms, otherContactsList;
   private String[] init = {""};
   private JScrollPane selectedMemberListScroll;
   private String username;
@@ -185,6 +190,16 @@ public class EditEvent extends JFrame {
       }
     });
     contentPane.add(btnConfirmDate);
+    
+    btnAddOtherContacts = new JButton("+");
+    btnAddOtherContacts.setBounds(287, 451, 55, 34);
+    btnAddOtherContacts.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            addExternContacts = new AddExternContacts();
+             
+        }
+    });
+    contentPane.add(btnAddOtherContacts);
 
     //----------TEXT FIELDS--------------------------------------------------
     txtDescription = new JTextArea();
@@ -364,8 +379,7 @@ public class EditEvent extends JFrame {
     	  deletedPersons.add(u.getUsername());
       }
       
-      System.out.println(deletedPersons);
-      System.out.println(participants);
+     
       
       java.util.Date now = new java.util.Date();
       String nowString = now.getHours() +":"+now.getMinutes(); 
@@ -390,6 +404,14 @@ public class EditEvent extends JFrame {
       if (!txtLocation.isVisible()) {
         try {
         	db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, ((Room) cbRoom.getSelectedItem()).getRoomID(), null);
+        	 if (addExternContacts != null) {
+     			
+                 otherContactsList = addExternContacts.getMailList();
+                 if (otherContactsList.size() > 0) {
+                 	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end, ((Room) cbRoom.getSelectedItem()).getLocation());
+       			}
+
+        	 }
         } catch (SQLException e1) {
           e1.printStackTrace();
         }
@@ -397,6 +419,14 @@ public class EditEvent extends JFrame {
       else if (txtLocation.isVisible()) {
         try {
         db.updateAppointment(avtale.getId(), dateSql, start, end, txtDescription.getText(), getUsername(), participants, deletedPersons, 7, txtLocation.getText());
+        if (addExternContacts != null) {
+ 			
+            otherContactsList = addExternContacts.getMailList();
+            if (otherContactsList.size() > 0) {
+            	new Emailsys(otherContactsList, txtDescription.getText(), dateSql, start, end, txtLocation.getText());
+  			}
+
+   	 	}
         } catch (SQLException e1) {
           e1.printStackTrace();
         }

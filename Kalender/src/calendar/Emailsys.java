@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
  
 public class Emailsys {
  
-  public Emailsys(ArrayList<String> emails, String desc, Date dateSql, Timestamp start, Timestamp end) {
+  public Emailsys(ArrayList<String> emails, String desc, Date dateSql, Timestamp start, Timestamp end, String sted) {
  
     final String username = "prosjektvar2014@gmail.com";
     final String password = "Prosjekt til Det er Over";
@@ -40,7 +40,8 @@ public class Emailsys {
         InternetAddress.parse(mail));
       message.setSubject("Invitasjon");
       message.setText(desc + " \n"
-      		+ start +" - "+ end);
+      		+ start +" - "+ end + " \n"
+      				+ "Sted: " + sted);
  
       Transport.send(message);
  

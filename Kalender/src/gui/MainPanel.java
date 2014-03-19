@@ -27,6 +27,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JEditorPane;
@@ -37,6 +38,7 @@ import javax.swing.ListModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -49,6 +51,8 @@ import java.awt.Insets;
 
 import java.awt.Button;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -68,9 +72,6 @@ import calendar.User;
 
 import javax.swing.JList;
 import javax.swing.JTextPane;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
 import java.awt.Font;
 
@@ -117,7 +118,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	 * @throws IOException 
 	 * @throws UnsupportedAudioFileException 
 	 */
-	public MainPanel(final String username) throws SQLException {
+	public MainPanel(final String username) throws SQLException, LineUnavailableException, UnsupportedAudioFileException, IOException {
 		this.username = username;
 		this.model = new CalendarModel(username);
 		this.notification = new Notification(username);
@@ -138,14 +139,12 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		notList.addListSelectionListener(this);
 		
 		if (notification.getNotAvtaleID().size() > 0) {
-			       try{
-			    	   java.net.URL url = getClass().getResource("/sounds/notification.mp3");
-			    	   AudioInputStream ais = AudioSystem.getAudioInputStream(url);
-			    	   Clip clip = AudioSystem.getClip();
-			    	   clip.open(ais);
-			    }
-			   catch(Exception ex)
-			   {  System.out.println(ex);}
+		            java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
+		            Clip clip = AudioSystem.getClip();
+		            // getAudioInputStream() also accepts a File or InputStream
+		            AudioInputStream ais = AudioSystem.getAudioInputStream( url );
+		            clip.open(ais);
+		            clip.loop(0);
 		}
 
 		notPanel.add(notList);
@@ -412,7 +411,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		
 		
 		Timer timer = new Timer();
-		timer.schedule(new update(model), 300000, 1800000);
+		timer.schedule(new update(model), 10000, 10000);
 	}
 	
 	public static void setStatusChangeButtons(final int appId, String status) {
@@ -530,9 +529,32 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			notList = new JList(notification.getNotMessages().toArray());
 			notList.addListSelectionListener(MainPanel.this);
 			notPanel.add(notList);
-			btnNoti.setText(notification.getNotAvtaleID().size() + "");	 
-			
+			btnNoti.setText(notification.getNotAvtaleID().size() + "");	
+			if (notification.getNotAvtaleID().size() > 0) {
+	            try {
+					playNotSound();
+				} catch (LineUnavailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedAudioFileException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		
 	    }
+		public void playNotSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException{
+			//ALARM:  https://dl.dropboxusercontent.com/s/6qqbmpe752yo424/alarm.wav?dl=1&token_hash=AAEeweeJW-SuhE-mhAcWpZF-jhkc95k98epwdVOTqCO5Hw
+			java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream ais = AudioSystem.getAudioInputStream( url );
+            clip.open(ais);
+            clip.loop(0);
+		}
+		
 	 }
 
 	@Override
