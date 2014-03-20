@@ -2,19 +2,14 @@ package calendar;
 
 import gui.EventBox;
 import gui.MainPanel;
-
 import java.awt.Color;
-import java.io.SerializablePermission;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import calendar.User;

@@ -3,14 +3,7 @@ package calendar;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
-
-import com.toedter.calendar.JDateChooser;
-
 import javax.swing.DefaultListModel;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 
 public class EventModel extends DefaultListModel{
 	

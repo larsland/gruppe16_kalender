@@ -10,8 +10,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
-import org.joda.time.LocalDate;
-
 public class Database {
 	/**
 	 *

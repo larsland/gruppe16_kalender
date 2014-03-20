@@ -16,6 +16,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+
 public class AddAlarm extends JPanel {
 	private JLabel lblInfo;
 	private JButton btnAddAlarm;
@@ -60,7 +62,6 @@ public class AddAlarm extends JPanel {
 		String user = null;
 		try {
 			ResultSet rs = db.getAppointmentInfo(appId);
-			System.out.println(rs + "");
 			if (rs.next()) {
 				startTime = rs.getTimestamp("Starttid");
 				date = rs.getDate("Dato");

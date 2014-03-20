@@ -1,16 +1,12 @@
 package gui;
  
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
- 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;

@@ -1,10 +1,7 @@
 package gui;
 
-import java.applet.AudioClip;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.print.DocFlavor.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -15,67 +12,31 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JTable;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Color;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollBar;
-import javax.swing.JEditorPane;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.JSeparator;
-import javax.swing.JInternalFrame;
-import javax.swing.SwingUtilities;
-
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.layout.RowSpec;
-
-import java.awt.Button;
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.table.DefaultTableModel;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JTabbedPane;
-import javax.swing.JSplitPane;
-
 import calendar.App;
 import calendar.CalendarModel;
 import calendar.Notification;
-import calendar.User;
-
 import javax.swing.JList;
-import javax.swing.JTextPane;
-
 import java.awt.Font;
-
 import javax.swing.SwingConstants;
 
 public class MainPanel extends JFrame  implements ListSelectionListener{
@@ -567,13 +528,10 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	            try {
 					playNotSound();
 				} catch (LineUnavailableException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

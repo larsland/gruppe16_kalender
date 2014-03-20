@@ -42,9 +42,9 @@ public class Notification {
 		try {
 			rs = db.getNotifications(username);
 			while (rs.next()) {
-				notAvtaleID.add(rs.getInt("AvtaleID"));
 				notTime.add(rs.getTimestamp("tid"));
 				 if (notTime.get(notTime.size() -1).before(now) ) {
+					 notAvtaleID.add(rs.getInt("AvtaleID"));
 					 notMessages.add(rs.getString("Meldingstekst"));
 				 }
 
@@ -62,7 +62,6 @@ public class Notification {
 			notMessages.remove(index);
 			notTime.remove(index);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

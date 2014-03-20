@@ -4,19 +4,13 @@ import gui.AddEvent;
 import gui.LogInPanel;
 import gui.MainPanel;
 import gui.RegisterPane;
-
 import java.awt.EventQueue;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

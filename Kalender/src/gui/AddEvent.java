@@ -1,9 +1,6 @@
 package gui;
  
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -11,51 +8,27 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
-import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
-
-import com.toedter.calendar.JDateChooser;
-
 import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JButton;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JDesktopPane;
 import javax.swing.JSeparator;
-import javax.swing.JScrollBar;
-import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
-
-import calendar.CalendarModel;
 import calendar.Database;
 import calendar.Emailsys;
 import calendar.EventModel;
 import calendar.Room;
 import calendar.User;
-
-import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDayChooser;
 import com.toedter.calendar.JCalendar;
-
 import javax.swing.SpinnerNumberModel;
  
 public class AddEvent extends JFrame {

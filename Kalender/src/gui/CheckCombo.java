@@ -4,9 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.swing.*;
-
 import calendar.Database;
 import calendar.User;
 

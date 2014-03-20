@@ -2,15 +2,11 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.jws.WebParam.Mode;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 
 public class EventRender implements ListCellRenderer {

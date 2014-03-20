@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Label;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
