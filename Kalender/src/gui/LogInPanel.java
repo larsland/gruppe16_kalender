@@ -1,7 +1,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -26,7 +28,7 @@ public class LogInPanel extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private static App app = new App();
-
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); 
 
 	/**
 	 * Create the frame.
@@ -34,7 +36,7 @@ public class LogInPanel extends JFrame {
 	public LogInPanel() {
 		setTitle("Logg inn");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 318, 180);
+		setBounds((int) (screenSize.getWidth()/2) - (318/2), 100, 318, 180);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

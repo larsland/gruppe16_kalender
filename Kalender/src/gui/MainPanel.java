@@ -50,6 +50,7 @@ import java.awt.Insets;
 //import com.jgoodies.forms.layout.RowSpec;
 
 import java.awt.Button;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -105,6 +106,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	private static JPanel statusBtnPanel;
 	private static JPanel creatorBtnPanel;
 	private static JButton btnUpdate;
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); 
 
 	
 	public static String getUsername() {
@@ -124,7 +126,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		this.notification = new Notification(username);
 		setTitle("Min kalender - " + username);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1071, 768);
+		setBounds((int) screenSize.getWidth()/2 - (1071/2), 0, 1071, 768);
 		contentPane = new JPanel();
 		contentPane.setAutoscrolls(true);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -165,6 +167,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearButtons();
+				model.fillSidePanel(0);
 				try {
 					model.setThisWeeksAppointments(-1);
 					lblMandag.setText(model.getDateString(1));
@@ -220,6 +223,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				clearButtons();
+				model.fillSidePanel(0);
 				try {
 					model.setThisWeeksAppointments(1);
 					lblMandag.setText(model.getDateString(1));
@@ -240,64 +244,10 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(55, 107, 746, 460);
 		contentPane.add(scrollPane);
-
-		table = new JTable(model);
-		table.setGridColor(Color.BLACK);
-		table.setBackground(Color.WHITE);
-		table.setCellSelectionEnabled(true);
-		table.setRowSelectionAllowed(true);
-		table.setColumnSelectionAllowed(true);
 		
-		for (int i = 1; i < 8; i++) {
-			table.getColumnModel().getColumn(i).setPreferredWidth(150);
-			table.getColumnModel().getColumn(i).setCellRenderer(new EventCellRender());
-			table.getColumnModel().getColumn(i).setCellEditor(new EventCellEditor());
-		}
+		createTable();
 		
 		
-		table.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void mouseClicked(MouseEvent e) {
-				JTable target = (JTable) e.getSource();
-				clearButtons();
-				model.getListModel().removeAllElements();
-				model.getParticipantsModel().removeAllElements();
-				model.fillSidePanelFromCell(target.getSelectedRow(), model.getDateString(target.getSelectedColumn()));
-				if (e.getClickCount() == 2) {
-					app.createApp();
-				}
-				}
-			});
-			
-			
-
-		table.setRowHeight(55);
-		table.setRowSelectionAllowed(true);
-	    table.setColumnSelectionAllowed(true);
-	    table.getTableHeader().setReorderingAllowed(false);
 
 		scrollPane.setViewportView(table);
 		appointment = new JPanel();
@@ -410,6 +360,66 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		
 		Timer timer = new Timer();
 		timer.schedule(new update(model), 10000, 10000);
+	}
+	
+	public void createTable(){
+		table = new JTable(model);
+		table.setGridColor(Color.BLACK);
+		table.setBackground(Color.WHITE);
+		table.setCellSelectionEnabled(true);
+		table.setRowSelectionAllowed(true);
+		table.setColumnSelectionAllowed(true);
+		
+		for (int i = 1; i < 8; i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(150);
+			table.getColumnModel().getColumn(i).setCellRenderer(new EventCellRender());
+			table.getColumnModel().getColumn(i).setCellEditor(new EventCellEditor());
+		}
+		
+		
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void mouseClicked(MouseEvent e) {
+				JTable target = (JTable) e.getSource();
+				clearButtons();
+				model.getListModel().removeAllElements();
+				model.getParticipantsModel().removeAllElements();
+				model.fillSidePanelFromCell(target.getSelectedRow(), model.getDateString(target.getSelectedColumn()));
+				if (e.getClickCount() == 2) {
+					app.createApp();
+				}
+				}
+			});
+			
+			
+
+		table.setRowHeight(55);
+		table.setRowSelectionAllowed(true);
+	    table.setColumnSelectionAllowed(true);
+	    table.getTableHeader().setReorderingAllowed(false);
 	}
 	
 	public static void setStatusChangeButtons(final int appId, String status) {

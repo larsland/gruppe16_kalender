@@ -15,9 +15,9 @@ import javax.swing.ListCellRenderer;
 
 public class EventRender implements ListCellRenderer {
 
-	private ImageIcon acceptedIcon = new ImageIcon("img/bullet_green.png");
-	private ImageIcon pendingIcon = new ImageIcon("img/bullet_yellow.png");
-	private ImageIcon rejectedIcon = new ImageIcon("img/bullet_red.png");
+	final private ImageIcon acceptedIcon = new ImageIcon(getClass().getResource("/img/bullet_green.png"));
+	final private ImageIcon pendingIcon = new ImageIcon(getClass().getResource("/img/bullet_yellow.png"));
+	final private ImageIcon rejectedIcon = new ImageIcon(getClass().getResource("/img/bullet_red.png"));
 	private JLabel l;
 	private JButton b;
 	
