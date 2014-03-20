@@ -34,17 +34,14 @@ import javax.swing.SpinnerNumberModel;
 public class AddEvent extends JFrame {
  
     private Database db = new Database();
-    private AddExternContacts addExternContacts;
-    private EventModel event;
-     
+    private AddExternContacts addExternContacts;     
+    
     private JPanel contentPane;
-    private static AddEvent frame;
     private JTextArea txtDescription;
     private JTextField txtDate, txtLocation;
     private JComboBox cbRoom;
-    private int numMembers;
     private JCalendar calendar;
-    private JButton btnConfirmDate;
+    private JButton btnConfirmDate, btnAddOtherContacts;
     private JLabel lblLocation, lblHeader;
     private JSpinner startTime, endTime;
     private Timestamp startStamp, endStamp;
@@ -53,19 +50,14 @@ public class AddEvent extends JFrame {
  
     private ArrayList rooms, otherContactsList;
     private String[] init = {""};
-    private JScrollPane selectedMemberListScroll;
     private String username;
-    private JButton btnAddOtherContacts;
      
     public String getUsername() {
         return username;
     }
  
- 
     public AddEvent(String username) throws SQLException {
         this.username = username;
-        numMembers = db.getAllUsers(getUsername()).size();
-         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 356, 569);
         contentPane = new JPanel();
@@ -75,9 +67,11 @@ public class AddEvent extends JFrame {
         initGUI();
     }
  
- 
+    /**
+     * Method for creating all the swing components, and setting their listeners
+     */
     public void initGUI() throws SQLException {
-         
+    	
         //----------LABELS--------------------------------------------------
         JLabel lblStartTime = new JLabel("Start tid:");
         lblStartTime.setBounds(12, 58, 70, 15);
@@ -224,10 +218,8 @@ public class AddEvent extends JFrame {
                 try {
                     fillRoomList();
                 }
-                catch(SQLException e1) {
-                     
-                }
-                 
+                catch(SQLException e1) {}
+                    
             }
         });
         contentPane.add(capacity);
@@ -239,14 +231,26 @@ public class AddEvent extends JFrame {
         contentPane.add(combo);
          
     }
-         
+        
+    /**
+     * Method for filling and adding the available rooms list, 
+     * depending on the selected room capacity in "capacity", and the selected time/date
+     */
+    @SuppressWarnings("deprecation")
     public void fillRoomList() throws SQLException {
-    	Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getStartStamp().getHours(), getStartStamp().getMinutes(), 0, 0);
-        Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), calendar.getDate().getDate(), getEndStamp().getHours(), getEndStamp().getMinutes(), 0, 0);
+    	Timestamp start = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), 
+    									calendar.getDate().getDate(), getStartStamp().getHours(), 
+    									getStartStamp().getMinutes(), 0, 0);
+    	
+        Timestamp end = new Timestamp(calendar.getDate().getYear(), calendar.getDate().getMonth(), 
+        							  calendar.getDate().getDate(), getEndStamp().getHours(), 
+        							  getEndStamp().getMinutes(), 0, 0);
+        
         rooms = db.getAvailableRooms(start, end, (Integer) capacity.getValue());
          
         contentPane.remove(cbRoom);
          
+        //Creates an empty room list, if the selected capacity is 0. (except from the "Annet" option)
         if ((Integer) capacity.getValue() == 0) {
             cbRoom = new JComboBox(init);
             cbRoom.setToolTipText("Room");
@@ -255,7 +259,8 @@ public class AddEvent extends JFrame {
             cbRoom.addActionListener(new RoomChange());
             contentPane.add(cbRoom);
         }
-                 
+                
+        //Creates a room list filled with the available room list in the database, fetched in the "rooms" field over
         cbRoom = new JComboBox(rooms.toArray());
         cbRoom.setToolTipText("Room");
         cbRoom.setBounds(195, 397, 143, 24);
@@ -263,7 +268,10 @@ public class AddEvent extends JFrame {
         cbRoom.addActionListener(new RoomChange());
         contentPane.add(cbRoom);
     }
-         
+     
+    /**
+     * Simple method for formating a java date to a nice string
+     */
     public String formatDate(java.util.Date date) {
         java.util.Date utlDate = date;
         java.sql.Date sqlDate = new java.sql.Date(utlDate.getTime());
@@ -273,6 +281,9 @@ public class AddEvent extends JFrame {
     }
      
  
+    /**
+     * Actionlistener for changing the selected room in the roomlist
+     */
     class RoomChange implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (cbRoom.getSelectedItem().equals("Annet")) {
@@ -287,6 +298,10 @@ public class AddEvent extends JFrame {
         }
     }
      
+    /**
+     * Returns the starttime of this event as a Timestamp
+     */
+    @SuppressWarnings("deprecation")
     public Timestamp getStartStamp() {
         int h = ((java.util.Date) startTime.getModel().getValue()).getHours();
         int m = ((java.util.Date) startTime.getModel().getValue()).getMinutes();
@@ -298,6 +313,10 @@ public class AddEvent extends JFrame {
         return startStamp;
     }
      
+    /**
+     * Returns the endtime of this event as a Timestamp
+     */
+    @SuppressWarnings("deprecation")
     public Timestamp getEndStamp() {
         int h1 = ((java.util.Date) endTime.getModel().getValue()).getHours();
         int m1 = ((java.util.Date) endTime.getModel().getValue()).getMinutes();
@@ -309,6 +328,7 @@ public class AddEvent extends JFrame {
         return endStamp;
     }
          
+    @SuppressWarnings("deprecation")
     class Save implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if ((txtDescription.getText() == "") || (txtDate.getText() == "")) {
