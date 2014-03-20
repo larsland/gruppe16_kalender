@@ -29,6 +29,7 @@ public class OtherPersonRenderer implements ListCellRenderer {
 			lbl.setOpaque(true);
 			return lbl;
 		}
+	
 		return null;
 	}
 

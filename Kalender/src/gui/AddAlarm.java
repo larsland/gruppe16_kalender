@@ -29,12 +29,12 @@ public class AddAlarm extends JPanel {
 	public AddAlarm() throws SQLException {
 		setLayout(null);
 		lblInfo = new JLabel("Still inn alarm: ");
-		lblInfo.setBounds(12, 12, 106, 15);
+		lblInfo.setBounds(17, 11, 106, 15);
 		add(lblInfo);
 		
-		btnAddAlarm = new JButton("");
+		btnAddAlarm = new JButton("Ok");
 		btnAddAlarm.setFont(new Font("Dialog", Font.BOLD, 9));
-		btnAddAlarm.setBounds(68, 36, 50, 30);
+		btnAddAlarm.setBounds(174, 5, 50, 30);
 		btnAddAlarm.setPreferredSize(new Dimension(100, 30));
 		btnAddAlarm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
@@ -44,7 +44,7 @@ public class AddAlarm extends JPanel {
 		add(btnAddAlarm);
 		
 		alarmTimer = new JSpinner();
-		alarmTimer.setBounds(12, 36, 50, 30);
+		alarmTimer.setBounds(119, 5, 50, 30);
 		alarmTimer.setPreferredSize(new Dimension(30, 30));
 		add(alarmTimer);
 		

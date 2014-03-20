@@ -74,6 +74,7 @@ public class EventBox extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		int appId = ((EventBox) e.getSource()).appId;
 		CalendarModel.fillSidePanel(appId);
+		MainPanel.getAddAlarm().setVisible(true);
 	}
 
 }

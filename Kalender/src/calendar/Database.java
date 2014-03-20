@@ -380,6 +380,13 @@ public class Database {
 		}
 	}
 	
+	public void sendAlarmToOne(int avtaleID, String username, String meld, Timestamp ts) throws SQLException {
+		stmt = con.createStatement();
+		String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst, tid) VALUES('" +
+				avtaleID + "', '" + username + "', '" + meld + "', '" + ts + "');";
+		stmt.execute(query);
+	}
+	
 	public void sendNotificationToOne(int avtaleID, String username, String meld) throws SQLException {
 		stmt = con.createStatement();
 		String query = "INSERT INTO Varsel(AvtaleID, Brukernavn, Meldingstekst) VALUES('" +

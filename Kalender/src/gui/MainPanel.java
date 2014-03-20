@@ -107,6 +107,11 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	private static JPanel creatorBtnPanel;
 	private static JButton btnUpdate;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); 
+	private static AddAlarm addAlarm;
+	
+	public static AddAlarm getAddAlarm() {
+		return addAlarm;
+	}
 
 	
 	public static String getUsername() {
@@ -136,7 +141,11 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		notPanel = new JPopupMenu();
 		notPanel.setLayout(new BorderLayout());
 		notList = new JList(notification.getNotMessages().toArray());
-		
+
+		addAlarm = new AddAlarm();
+		addAlarm.setBounds(829, 466, 226, 40);
+		addAlarm.setVisible(false);
+		contentPane.add(addAlarm);	
 
 		notList.addListSelectionListener(this);
 		
@@ -278,7 +287,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		appointment.add(creatorBtnPanel);
 
 		JButton btnNyAvtale = new JButton("Ny Avtale");
-		btnNyAvtale.setBounds(829, 485, 117, 29);
+		btnNyAvtale.setBounds(829, 518, 122, 34);
 		btnNyAvtale.addActionListener(app);
 		contentPane.add(btnNyAvtale);
 
@@ -339,7 +348,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		JList otherPersonsList = new JList(otherPersonsListModel);
 		otherPersonsList.setCellRenderer(new OtherPersonRenderer());
 		otherPersonsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		otherPersonsList.setVisibleRowCount(2);
+		otherPersonsList.setVisibleRowCount(3);
 		otherPersonsList.setBackground(new Color(238,238,238));
 		otherPersonsList.setBounds(50, 650, 735, 50);
 		contentPane.add(otherPersonsList);
@@ -408,6 +417,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 				model.getListModel().removeAllElements();
 				model.getParticipantsModel().removeAllElements();
 				model.fillSidePanelFromCell(target.getSelectedRow(), model.getDateString(target.getSelectedColumn()));
+				addAlarm.setVisible(false);
 				if (e.getClickCount() == 2) {
 					app.createApp();
 				}
@@ -513,6 +523,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 	public static void clearButtons() {
 		statusBtnPanel.removeAll();
 		creatorBtnPanel.removeAll();
+		addAlarm.setVisible(true);
 	}
 
 	public void playNotSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException{
