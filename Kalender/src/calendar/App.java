@@ -37,8 +37,6 @@ public class App implements ActionListener {
 	public static void main(String[] args) throws SQLException{
 		loginFrame = new LogInPanel();
 		loginFrame.setVisible(true);
-	//	mainFrame = new MainPanel("andekol");
-	//	mainFrame.setVisible(true);
 	}
 
 	public void validateUser(String username, String password) throws SQLException, LineUnavailableException, UnsupportedAudioFileException, IOException{
@@ -58,8 +56,6 @@ public class App implements ActionListener {
 					}
 				}
 			});
-			
-			
 
 		}
 		else{
@@ -116,8 +112,6 @@ public class App implements ActionListener {
 			}
 		});
 		
-		
-		
 	}
 
 
@@ -134,7 +128,6 @@ public class App implements ActionListener {
 				}
 			}
 		});
-		
 		
 	}
 

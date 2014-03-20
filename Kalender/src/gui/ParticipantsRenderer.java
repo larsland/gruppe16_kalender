@@ -11,9 +11,9 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 public class ParticipantsRenderer implements ListCellRenderer {
-	private ImageIcon acceptedIcon = new ImageIcon("src/img/bullet_green.png");
-	private ImageIcon pendingIcon = new ImageIcon("src/img/bullet_yellow.png");
-	private ImageIcon rejectedIcon = new ImageIcon("src/img/bullet_red.png");
+	private ImageIcon acceptedIcon = new ImageIcon(getClass().getResource("/img/bullet_green.png"));
+	private ImageIcon pendingIcon = new ImageIcon(getClass().getResource("/img/bullet_yellow.png"));
+	private ImageIcon rejectedIcon = new ImageIcon(getClass().getResource("/img/bullet_red.png"));
 
 	@Override
 	public Component getListCellRendererComponent(JList arg0, Object arg1,

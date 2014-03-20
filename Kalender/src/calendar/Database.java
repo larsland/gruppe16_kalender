@@ -18,10 +18,9 @@ public class Database {
 	 *
 	 *
 	 */
-private String url = "jdbc:mysql://mysql.stud.ntnu.no/andekol_g16_db";
-private String username = "andekol_g16";
-private String pwd = "gruppe16";
-
+	private String url = "jdbc:mysql://mysql.stud.ntnu.no/andekol_g16_db";
+	private String username = "andekol_g16";
+	private String pwd = "gruppe16";
 
 	private Connection con = null;
 	private Statement stmt;
@@ -153,7 +152,6 @@ private String pwd = "gruppe16";
 
 	/*
 	 * Endre avtale
-	 * TODO rom, varsel
 	 */
 	public void updateAppointment(int id, Date date, Timestamp starttime, Timestamp endtime, String desc, String creator, ArrayList<String> participants, ArrayList<String> deletedPersons ,int romId, String otherPlace) throws SQLException{
 		String query1 = "UPDATE Avtale SET Dato = ?, Starttid = ?, Sluttid = ?, Beskrivelse = ?, Opprettet_av = ?, Sted = ? WHERE AvtaleID = ?;";

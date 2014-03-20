@@ -51,6 +51,7 @@ public class AddExternContacts extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String s[] = txtContacts.getText().split("\\r?\\n");
                 mailList = new ArrayList<String>(Arrays.asList(s)) ;
+                dispose();
             }
         });
         contentPane.add(btnAddContacts);

@@ -139,12 +139,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		notList.addListSelectionListener(this);
 		
 		if (notification.getNotAvtaleID().size() > 0) {
-		            java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
-		            Clip clip = AudioSystem.getClip();
-		            // getAudioInputStream() also accepts a File or InputStream
-		            AudioInputStream ais = AudioSystem.getAudioInputStream( url );
-		            clip.open(ais);
-		            clip.loop(0);
+			playNotSound();
 		}
 
 		notPanel.add(notList);
@@ -189,27 +184,27 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		contentPane.add(btnNewButton);
 
 		lblMandag = new JLabel(model.getDateString(1));
-		lblMandag.setBounds(127, 88, 61, 16);
+		lblMandag.setBounds(150, 88, 61, 16);
 		contentPane.add(lblMandag);
 
 		lblTirsdag = new JLabel(model.getDateString(2));
-		lblTirsdag.setBounds(223, 88, 61, 16);
+		lblTirsdag.setBounds(243, 88, 61, 16);
 		contentPane.add(lblTirsdag);
 
 		lblOnsdag = new JLabel(model.getDateString(3));
-		lblOnsdag.setBounds(316, 88, 61, 16);
+		lblOnsdag.setBounds(335, 88, 61, 16);
 		contentPane.add(lblOnsdag);
 
 		lblTorsdag = new JLabel(model.getDateString(4));
-		lblTorsdag.setBounds(412, 88, 61, 16);
+		lblTorsdag.setBounds(421, 88, 61, 16);
 		contentPane.add(lblTorsdag);
 
 		lblFredag = new JLabel(model.getDateString(5));
-		lblFredag.setBounds(510, 88, 61, 16);
+		lblFredag.setBounds(530, 88, 61, 16);
 		contentPane.add(lblFredag);
 
 		lblLrdag = new JLabel(model.getDateString(6));
-		lblLrdag.setBounds(603, 88, 61, 16);
+		lblLrdag.setBounds(612, 88, 61, 16);
 		contentPane.add(lblLrdag);
 
 		lblSndag = new JLabel(model.getDateString(7));
@@ -510,6 +505,14 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		creatorBtnPanel.removeAll();
 	}
 
+	public void playNotSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException{
+		//ALARM:  https://dl.dropboxusercontent.com/s/6qqbmpe752yo424/alarm.wav?dl=1&token_hash=AAEeweeJW-SuhE-mhAcWpZF-jhkc95k98epwdVOTqCO5Hw
+		java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
+        Clip clip = AudioSystem.getClip();
+        AudioInputStream ais = AudioSystem.getAudioInputStream( url );
+        clip.open(ais);
+        clip.loop(0);
+	}
 
 	class update extends TimerTask {
 	    
@@ -556,14 +559,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			
 	    }
 	 }
-		public void playNotSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException{
-			//ALARM:  https://dl.dropboxusercontent.com/s/6qqbmpe752yo424/alarm.wav?dl=1&token_hash=AAEeweeJW-SuhE-mhAcWpZF-jhkc95k98epwdVOTqCO5Hw
-			java.net.URL url = new java.net.URL("https://dl.dropboxusercontent.com/s/70pxrsnzap8w4v8/sms-received1.wav?dl=1&token_hash=AAGEqYcPGfYdzgpGnidBYtwt8WHNouS2tKiyUQCdhFFMpQ");
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream ais = AudioSystem.getAudioInputStream( url );
-            clip.open(ais);
-            clip.loop(0);
-		}
+		
 		
 
 	@Override

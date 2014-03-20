@@ -19,10 +19,13 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
 public class CalendarModel extends DefaultTableModel {
-
 	/**
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	private static String username = null;
 	private static Database db = new Database();
@@ -170,11 +173,11 @@ public class CalendarModel extends DefaultTableModel {
 	 */
 	public void addOtherPersonsAppointments(String u, Color color) throws SQLException {
 
-			//Sett inn andres avtaler
-			ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
-			insertIntoCalendar(rs,u, color);
-			ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
-			insertIntoCalendar(rs2,u, color);
+		//Sett inn andres avtaler
+		ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
+		insertIntoCalendar(rs,u, color);
+		ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
+		insertIntoCalendar(rs2,u, color);
 
 		//Oppdater kalenderen
 		this.fireTableDataChanged();
@@ -307,6 +310,7 @@ public class CalendarModel extends DefaultTableModel {
 	public void setOtherPersons(ArrayList<User> selectedPersons) {
 		this.otherPersons = selectedPersons;
 	}
+
 	public static int getSelectedAppId() {
 		return selectedAppId;
 	}

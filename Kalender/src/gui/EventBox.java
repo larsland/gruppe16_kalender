@@ -29,9 +29,9 @@ public class EventBox extends JButton implements ActionListener {
 	private int appId;
 	private Database db = new Database();
 	private String username = null;
-	private ImageIcon acceptedIcon = new ImageIcon("src/img/success-icon.png");
-	private ImageIcon pendingIcon = new ImageIcon("src/img/alert-icon.png");
-	private ImageIcon rejectedIcon = new ImageIcon("src/img/close-icon.png");
+	final private ImageIcon acceptedIcon = new ImageIcon(getClass().getResource("/img/success-icon.png"));
+	final private ImageIcon pendingIcon = new ImageIcon(getClass().getResource("/img/alert-icon.png"));
+	final private ImageIcon rejectedIcon = new ImageIcon(getClass().getResource("/img/close-icon.png"));
 	
 	public EventBox(String s, int appId, String username, Color color) throws SQLException {
 		super(s);
