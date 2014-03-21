@@ -1,6 +1,7 @@
 package gui;
  
 import java.awt.Color;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -8,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -15,20 +17,25 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+
 import calendar.Database;
 import calendar.Emailsys;
 import calendar.EventModel;
 import calendar.Room;
 import calendar.User;
+
 import com.toedter.calendar.JCalendar;
+
 import javax.swing.SpinnerNumberModel;
  
 public class AddEvent extends JFrame {
@@ -152,7 +159,8 @@ public class AddEvent extends JFrame {
         });
         contentPane.add(btnConfirmDate);
          
-        btnAddOtherContacts = new JButton("+");
+        btnAddOtherContacts = new JButton("");
+        btnAddOtherContacts.setIcon(new ImageIcon(getClass().getResource("/img/envelope.png")));
         btnAddOtherContacts.setBounds(287, 451, 55, 34);
         btnAddOtherContacts.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

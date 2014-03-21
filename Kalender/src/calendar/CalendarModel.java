@@ -14,61 +14,31 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
 public class CalendarModel extends DefaultTableModel {
-	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
 	
-	private static final long serialVersionUID = 1L;
 	private static String username = null;
 	private static Database db = new Database();
+	
+	// Get the first day of this week
 	private LocalDate now = new LocalDate();
 	private LocalDate monday = now.withDayOfWeek(DateTimeConstants.MONDAY);
 	private LocalDate sunday = now.withDayOfWeek(DateTimeConstants.SUNDAY);
+
 	private static DefaultListModel listModel = new EventModel();
 	private static DefaultListModel participantsModel = new DefaultListModel();
 	private static JPanel appointment = new JPanel();
 	private static int selectedAppId = 0;
+	
+	// Create timestamp of first day of this week
 	private Timestamp _monday = new Timestamp(monday.getYear() - 1900, monday.getMonthOfYear() - 1, monday.getDayOfMonth(), 0, 0, 0, 0);
 	private Timestamp _sunday = new Timestamp(sunday.getYear() - 1900, sunday.getMonthOfYear() - 1 , sunday.getDayOfMonth(), 23, 0, 0, 0);
+
 	private ArrayList<User> otherPersons = new ArrayList<User>();
 	private static String selectedDate;
 	private static int selectedY;
 
-	public static DefaultListModel getListModel() {
-		return listModel;
-	}
-	public static DefaultListModel getParticipantsModel() {
-		return participantsModel;
-	}
-
-	public static JPanel getAppointment() {
-		return appointment;
-	}
-
-	public static String getUsername() {
-		return username;
-	}
-	
-	public Timestamp get_monday() {
-		return _monday;
-	}
-
-	public String getDateString(int day){
-		if (day == 1) {
-			return _monday.getDate() + "/" + (_monday.getMonth() + 1);
-		}
-		Timestamp tmpDate = new Timestamp(_monday.getYear(), _monday.getMonth(), _monday.getDate(), 0, 0, 0, 0);
-		tmpDate.setDate(tmpDate.getDate() + (day - 1));
-		return (tmpDate.getDate()) + "/" + (tmpDate.getMonth() + 1);
-	}
-
-	
-
-
 	public CalendarModel(String username) throws SQLException {
+
+		//Initialize the JTable
 		super(new Object[][] {
 				{"07:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
 				{"08:00", new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel(), new JPanel()},
@@ -92,13 +62,48 @@ public class CalendarModel extends DefaultTableModel {
 			new String[] {
 				"", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "L\u00F8rdag", "S\u00F8ndag"
 			});
+
 		this.username = username;
 		this.setThisWeeksAppointments(0);
 	}
 
+	public static DefaultListModel getListModel() {
+		return listModel;
+	}
+	public static DefaultListModel getParticipantsModel() {
+		return participantsModel;
+	}
 
+	public static JPanel getAppointment() {
+		return appointment;
+	}
+
+	public static String getUsername() {
+		return username;
+	}
+	
+	public Timestamp get_monday() {
+		return _monday;
+	}
+
+	/**
+	 * Returns a formatted string of a day 
+	 */
+	public String getDateString(int day){
+		if (day == 1) {
+			return _monday.getDate() + "/" + (_monday.getMonth() + 1);
+		}
+		Timestamp tmpDate = new Timestamp(_monday.getYear(), _monday.getMonth(), _monday.getDate(), 0, 0, 0, 0);
+		tmpDate.setDate(tmpDate.getDate() + (day - 1));
+		return (tmpDate.getDate()) + "/" + (tmpDate.getMonth() + 1);
+	}
+	
+	/**
+	 * Retrieves all the appointments for a given week and inserts them into the calendar.
+	 */
 	public void setThisWeeksAppointments(int weekNumber) throws SQLException{
 		clear();
+
 		if (weekNumber > 0) {
 			_monday.setDate(_monday.getDate() + 7);
 			_sunday.setDate(_sunday.getDate() + 7);
@@ -107,20 +112,28 @@ public class CalendarModel extends DefaultTableModel {
 			_monday.setDate(_monday.getDate() - 7);
 			_sunday.setDate(_sunday.getDate() - 7);
 		}
+		
+		// Retrieve appointments
 		ResultSet rs = db.getCreatedAppointments(username, _monday, _sunday);
 		insertIntoCalendar(rs,username, Color.green);
 		ResultSet rs2 = db.getInvitedAppointments(username, _monday, _sunday);
 		insertIntoCalendar(rs2,username, Color.green);
+
 		Color[] personColors = {Color.red, Color.blue, Color.cyan, Color.magenta, Color.yellow, Color.pink, Color.orange};
+
+		// Add appointments for other users
 		if (otherPersons.size() > 0) {
-		for (int i = 0; i < otherPersons.size(); i++) {
-			if(otherPersons.get(i).equals(this.getUsername())){continue;}
-			try {
-				addOtherPersonsAppointments(otherPersons.get(i).getUsername(), personColors[i]);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
+			for (int i = 0; i < otherPersons.size(); i++) {
+				
+				// Do not add appointments for logged in user
+				if(otherPersons.get(i).equals(this.getUsername())){continue;}
+
+				try {
+					addOtherPersonsAppointments(otherPersons.get(i).getUsername(), personColors[i]);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
-		}
 		}
 		this.fireTableDataChanged();
 		
@@ -151,37 +164,36 @@ public class CalendarModel extends DefaultTableModel {
 
 		listModel.removeAllElements();
 		
-
-		// Fjern alle objekter i JPanel Cell
+		// Removes all the elements in the calendar table
 		for (int i = 0; i < getRowCount(); i++) {
 			for (int j = 1; j < getColumnCount();j++) {
 				((JPanel) this.getValueAt(i, j)).removeAll();
 			}
 		}
 
-		// Oppdater tabell
 		this.fireTableDataChanged();
 	}
 
-	/*
-	 *
-	 */
+	
 	public void addOtherPersonsAppointments(String u, Color color) throws SQLException {
 
-		//Sett inn andres avtaler
+		// Insert other persons appointments
 		ResultSet rs = db.getCreatedAppointments(u, _monday, _sunday);
 		insertIntoCalendar(rs,u, color);
 		ResultSet rs2 = db.getInvitedAppointments(u, _monday, _sunday);
 		insertIntoCalendar(rs2,u, color);
 
-		//Oppdater kalenderen
+		// Update table
 		this.fireTableDataChanged();
 
 	}
-
+	
+	/**
+	 * Fill information about the appointment in the side panel. 
+	 */
 	public static void fillSidePanel(int appId){
-		CalendarModel.getListModel().removeAllElements();
-		CalendarModel.getParticipantsModel().removeAllElements();
+		getListModel().removeAllElements();
+		getParticipantsModel().removeAllElements();
 		ResultSet rs;
 		ResultSet rs2;
 		selectedAppId = appId;
@@ -195,28 +207,29 @@ public class CalendarModel extends DefaultTableModel {
 					sted = rs.getString("Sted");
 				}
 				MainPanel.clearButtons();
-				CalendarModel.getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
-				CalendarModel.getListModel().addElement("Avtalen slutter kl: " + rs.getString("Sluttid").substring(11, 16));
-				CalendarModel.getListModel().addElement("Dato: " + dato[2].substring(0, 2) + "/" + dato[1]);
-				CalendarModel.getListModel().addElement("Sted: " + sted);
-				CalendarModel.getListModel().addElement(" ");
-				CalendarModel.getListModel().addElement("Beskrivelse:");
-				CalendarModel.getListModel().addElement(rs.getString("Beskrivelse"));
+				
+				// Add elements to side panel's model
+				getListModel().addElement("Avtalen starter kl: " + rs.getString("Starttid").substring(11, 16));
+				getListModel().addElement("Avtalen slutter kl: " + rs.getString("Sluttid").substring(11, 16));
+				getListModel().addElement("Dato: " + dato[2].substring(0, 2) + "/" + dato[1]);
+				getListModel().addElement("Sted: " + sted);
+				getListModel().addElement(" ");
+				getListModel().addElement("Beskrivelse:");
+				getListModel().addElement(rs.getString("Beskrivelse"));
+
 				if (rs.getString("Opprettet_av").equals(username)) {
-					CalendarModel.getListModel().addElement("1");
+					getListModel().addElement("1");
 					MainPanel.setCreatorButtons(appId);
-					CalendarModel.getListModel().addElement("1");
-					
-					//set endre button and if slett.click, delete avtale
+					getListModel().addElement("1");
 				}
 				else {
-					CalendarModel.getListModel().addElement("0");
+					getListModel().addElement("0");
 				}
 
 				ArrayList<Object> label = new ArrayList<Object>();
 				label.add(rs.getString("Opprettet_av"));
 				label.add(1);
-				CalendarModel.getParticipantsModel().addElement(label);
+				getParticipantsModel().addElement(label);
 			}
 			while (rs2.next()) {
 				ArrayList<Object> label = new ArrayList<Object>();
@@ -225,14 +238,14 @@ public class CalendarModel extends DefaultTableModel {
 				label.add(tempUsername);
 				label.add(tempStatus);
 				if (tempUsername.equals(username)) {
-					CalendarModel.getListModel().addElement(tempStatus + "");
+					getListModel().addElement(tempStatus + "");
 					MainPanel.setStatusChangeButtons(appId, tempStatus + "");
 				}
-				CalendarModel.getParticipantsModel().addElement(label);
+				getParticipantsModel().addElement(label);
 
 			}
-			if (CalendarModel.getListModel().size() < 8) {
-				CalendarModel.getListModel().addElement(" ");
+			if (getListModel().size() < 8) {
+				getListModel().addElement(" ");
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();

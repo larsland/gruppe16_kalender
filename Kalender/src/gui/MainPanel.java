@@ -138,6 +138,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			public void actionPerformed(ActionEvent e) {
 				clearButtons();
 				model.fillSidePanel(0);
+				addAlarm.setVisible(false);
 				try {
 					model.setThisWeeksAppointments(-1);
 					lblMandag.setText(model.getDateString(1));
@@ -194,6 +195,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 			public void actionPerformed(ActionEvent arg0) {
 				clearButtons();
 				model.fillSidePanel(0);
+				addAlarm.setVisible(false);
 				try {
 					model.setThisWeeksAppointments(1);
 					lblMandag.setText(model.getDateString(1));
@@ -267,12 +269,12 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		contentPane.add(combo);
 		JButton btnLeggTil = new JButton("Ok");
 		btnLeggTil.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(personsComboBox.getSelectedPersons());
 				clearButtons();
-				model.setOtherPersons(personsComboBox.getSelectedPersons());
 				otherPersonsListModel.removeAllElements();
+				model.setOtherPersons(personsComboBox.getSelectedPersons());
 				try {
 					model.clear();
 				} catch (SQLException e2) {
@@ -285,7 +287,6 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 				}
 				for (int i = 0; i < personsComboBox.getSelectedPersons().size(); i++) {
 					try {
-						if(personsComboBox.getSelectedPersons().get(i).getUsername().equals(model.getUsername())){continue;}
 						model.addOtherPersonsAppointments(personsComboBox.getSelectedPersons().get(i).getUsername(), personColors[i]);
 						ArrayList<Object> personAndColor = new ArrayList<Object>();
 						personAndColor.add(personsComboBox.getSelectedPersons().get(i));
@@ -309,7 +310,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		JList otherPersonsList = new JList(otherPersonsListModel);
 		otherPersonsList.setCellRenderer(new OtherPersonRenderer());
 		otherPersonsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		otherPersonsList.setVisibleRowCount(3);
+		otherPersonsList.setVisibleRowCount(2);
 		otherPersonsList.setBackground(new Color(238,238,238));
 		otherPersonsList.setBounds(50, 650, 735, 50);
 		contentPane.add(otherPersonsList);
@@ -329,7 +330,7 @@ public class MainPanel extends JFrame  implements ListSelectionListener{
 		
 		
 		Timer timer = new Timer();
-		timer.schedule(new update(model), 10000, 10000);
+		timer.schedule(new update(model), 180000, 180000);
 	}
 	
 	public void createTable(){

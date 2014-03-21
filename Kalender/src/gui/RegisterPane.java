@@ -22,6 +22,7 @@ public class RegisterPane extends JFrame {
 	private JButton btnLogIn;
 	private JLabel lblErrorMessage;
 	
+	
 	public RegisterPane() {
 		getContentPane().setLayout(null);
 		setBounds(100, 100, 318, 240);

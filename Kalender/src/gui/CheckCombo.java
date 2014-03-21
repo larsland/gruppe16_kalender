@@ -24,19 +24,23 @@ public class CheckCombo extends JComboBox implements ActionListener {
     CheckComboRenderer ccr = (CheckComboRenderer) cb.getRenderer();
     ccr.checkBox.setSelected((store.state = !store.state));
     setSelectedPersons(store.id, store.state);
+    System.out.println(getSelectedPersons());
+    System.out.println(store.state);
   }
 
   public void setSelectedPersons(User username, boolean selected) {
 	  if (selected) {
-		  selectedPersons.add(username);
+		  if (!getSelectedPersons().contains(username)) {
+			  selectedPersons.add(username);
+		  }
 	  }
 	  else{
-//		  selectedPersons.remove(username);
-		  for (int i = 0; i < selectedPersons.size(); i++) {
+		  selectedPersons.remove(username);
+		 /* for (int i = 0; i < selectedPersons.size(); i++) {
 			  if (username.getUsername().equals(selectedPersons.get(i).getUsername())); {
 				  selectedPersons.remove(i);
 			}
-		}
+		}*/
 	  }			
 	}
 
@@ -91,11 +95,12 @@ public class CheckCombo extends JComboBox implements ActionListener {
 
 	    User[] ids = new User[stringNames.size()];
 	    Boolean[] values = new Boolean[stringNames.size()];
-
+	    
 	    for (int i = 0; i < stringNames.size(); i++) {
 	      ids[i] = stringNames.get(i);
 	      if (inSelected(stringNames.get(i).getName(), selected)) {
 	    	  values[i] = Boolean.TRUE;
+	    	  setSelectedPersons(stringNames.get(i), true);
 	      }
 	      else{
 	    	  values[i] = Boolean.FALSE;
